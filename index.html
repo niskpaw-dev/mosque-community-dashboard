@@ -2,10 +2,88 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0; url=pages/index.html">
-  <title>Redirecting...</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../styles/style.css">
+  <title>Waktu Solat Dashboard</title>
 </head>
 <body>
-  <p>Redirecting to <a href="pages/index.html">dashboard</a>.</p>
+  <div class="page-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Aplikasi Solat Premium</p>
+        <h1>Waktu Solat Harian</h1>
+        <p class="subline">Kuala Langat • Kemas kini automatik setiap saat</p>
+      </div>
+    </header>
+
+    <section class="info-row">
+      <article class="info-chip">
+        <p class="info-label">Tarikh Hijri</p>
+        <p id="hijriDate" class="info-value">Loading...</p>
+      </article>
+      <article class="info-chip">
+        <p class="info-label">Masa Sekarang</p>
+        <p id="currentTime" class="info-value">Loading...</p>
+      </article>
+      <article class="info-chip">
+        <p class="info-label">Cuaca</p>
+        <p id="weatherStatus" class="info-value">Memuat...</p>
+      </article>
+      <article class="info-chip">
+        <p class="info-label">Status Masjid</p>
+        <p id="masjidStatus" class="info-value">Memuat...</p>
+      </article>
+    </section>
+
+    <main class="dashboard">
+      <section class="card hero-card waktu-solat">
+        <div class="hero-header">
+          <div>
+            <p class="eyebrow">Seterusnya</p>
+            <h2>⏰ Waktu Solat</h2>
+          </div>
+          <span class="pill" id="prayerStatusPill">Aktif</span>
+        </div>
+
+        <div class="hero-body">
+          <p class="hero-label">Waktu seterusnya</p>
+          <p id="nextPrayer">Loading...</p>
+          <p id="countdown">Loading...</p>
+          <p id="lastUpdated" class="last-updated">Dikemaskini --</p>
+          <div id="currentPrayerList" class="current-prayer-list" aria-label="Current prayer sequence"></div>
+        </div>
+
+        <div class="progress-block">
+          <div class="progress-meta">Perjalanan ke waktu solat berikutnya</div>
+          <div class="progress">
+            <div id="progressBar"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card schedule-card">
+        <div class="card-header">
+          <h2>🗓 Jadual Solat</h2>
+        </div>
+        <div class="schedule-grid" id="prayerSchedule"></div>
+      </section>
+
+      <section class="card side-card">
+        <div class="card-header">
+          <h2>📢 Pengumuman</h2>
+        </div>
+        <p id="announcementText">Memuat pengumuman solat...</p>
+      </section>
+
+      <section class="card side-card">
+        <div class="card-header">
+          <h2>📊 Status Masjid</h2>
+        </div>
+        <p id="statusText">Menunggu status masjid...</p>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="../utils/app.js"></script>
 </body>
 </html>
