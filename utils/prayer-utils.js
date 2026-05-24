@@ -40,7 +40,7 @@ export function normalizePrayerData(prayers, referenceDate) {
 }
 
 function compareMalaysiaDate(timestamp, referenceDate) {
-  const formatter = new Intl.DateTimeFormat('en-GB', {
+  const formatter = new Intl.DateTimeFormat('en-MY', {
     timeZone: 'Asia/Kuala_Lumpur',
     day: '2-digit',
     month: '2-digit',
