@@ -32,10 +32,12 @@ const topDateEls = {
 };
 
 const focusEls = {
-  name: document.getElementById('currentPrayerName'),
-  time: document.getElementById('currentPrayerTime'),
+  activeBadge: document.getElementById('activePrayerBadge'),
+  nextName: document.getElementById('nextPrayerFocus'),
+  nextTime: document.getElementById('nextPrayerTimeFocus'),
   currentPrayerList: document.getElementById('currentPrayerList'),
 };
+
 
 const ringEls = {
   jam: document.getElementById('timerJam'),
@@ -99,32 +101,34 @@ function setRingProgress(cardEl, ratio01) {
   fg.style.strokeDashoffset = `${circumference * (1 - pct)}`;
 }
 
-function updateCurrentPrayerFocusAndCountdown() {
+function updatePrayerZonesAndCountdown() {
   if (!state.prayerTimes || !state.nextPrayerTime) return;
 
   const now = new Date();
   const currentPrayer = getCurrentPrayer(state.prayerTimes, now);
   const nextPrayer = getNextPrayer(state.prayerTimes, now);
 
-  // Focus section
-  if (focusEls.name) focusEls.name.textContent = currentPrayer.name
-    ? (currentPrayer.name === 'Fajr' ? 'Subuh'
-      : currentPrayer.name === 'Dhuhr' ? 'Zohor'
-        : currentPrayer.name === 'Asr' ? 'Asar'
-          : currentPrayer.name === 'Maghrib' ? 'Maghrib'
-            : currentPrayer.name === 'Isha' ? 'Isyak'
-              : currentPrayer.name)
-    : '--';
+  // 1) CURRENT ACTIVE PRAYER
+  const activeLabel = CONFIG.translation[currentPrayer.name] || currentPrayer.name || '--';
+  if (focusEls.activeBadge) {
+    focusEls.activeBadge.textContent = `🌙 ${activeLabel}`;
+    focusEls.activeBadge.classList.add('active-prayer-pulse');
+  }
 
-  if (focusEls.time) {
-    focusEls.time.textContent = nextPrayer.date.toLocaleTimeString('en-US', {
+  // 2) NEXT UPCOMING PRAYER
+  if (focusEls.nextName) {
+    focusEls.nextName.textContent = CONFIG.translation[nextPrayer.name] || nextPrayer.name || '—';
+  }
+
+  if (focusEls.nextTime) {
+    focusEls.nextTime.textContent = nextPrayer.date.toLocaleTimeString('en-US', {
       hour: '2-digit',
       minute: '2-digit',
       hour12: true
     });
   }
 
-  // Countdown rings: ratio based on remaining time in the current next prayer window.
+  // 3) COUNTDOWN TO NEXT PRAYER (always target nextPrayerTime)
   const secondsLeft = Math.max(0, (state.nextPrayerTime - now) / 1000);
   const { hours, minutes, seconds } = secondsToHMS(secondsLeft);
 
@@ -133,9 +137,6 @@ function updateCurrentPrayerFocusAndCountdown() {
   if (ringEls.saat) ringEls.saat.textContent = String(seconds).padStart(2, '0');
 
   // Best-effort ring progress: use percent of each unit relative to its max.
-  // - JAM: within nextPrayer interval up to 12h cap
-  // - MINIT: within 60
-  // - SAAT: within 60
   const hourRatio = Math.min(1, hours / 12);
   const minRatio = minutes / 60;
   const secRatio = seconds / 60;
@@ -147,6 +148,7 @@ function updateCurrentPrayerFocusAndCountdown() {
     if (kind === 'saat') setRingProgress(cardEl, secRatio);
   }
 }
+
 
 async function init() {
   console.log('Waktu Solat app start');
@@ -226,7 +228,8 @@ function updateDashboard() {
   }
 
   // New UI: focus + rings countdown
-  updateCurrentPrayerFocusAndCountdown();
+  updatePrayerZonesAndCountdown();
+
 
   renderStatusCard(state.masjidStatus);
   updateLastUpdated();

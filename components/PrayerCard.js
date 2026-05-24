@@ -1,5 +1,6 @@
 import { CONFIG, getPrayerSchedule, getProgressPercent, formatDuration } from '../utils/prayer-utils.js';
 
+
 const elements = {
   nextPrayer: document.getElementById('nextPrayer'),
   countdown: document.getElementById('countdown'),
@@ -101,9 +102,11 @@ export function renderPrayerCard(state) {
   }
 
 
+  // Active row styling should reflect CURRENT ACTIVE PRAYER (not next)
   applyPrayerStatus(currentPrayerName);
   renderCurrentPrayerList(getPrayerSchedule(prayerTimes, new Date()), currentPrayerName);
   renderScheduleGrid(getPrayerSchedule(prayerTimes, new Date()), currentPrayerName);
+
 
   return progress;
 }
