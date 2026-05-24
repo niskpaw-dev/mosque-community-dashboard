@@ -1,4 +1,4 @@
-﻿export const CONFIG = {
+export const CONFIG = {
   apiUrl: 'https://api.waktusolat.app/v2/solat/SGR03',
   prayerOrder: ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'],
   translation: {
