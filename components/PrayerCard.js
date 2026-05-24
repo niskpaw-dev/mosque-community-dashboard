@@ -8,10 +8,11 @@ function renderScheduleGridContent(schedule, activeName) {
   if (!elements.scheduleGrid) return;
 
   const miladi = new Date().toLocaleDateString('id-ID', {
+    weekday: 'long',
     day: '2-digit',
     month: 'short',
     year: 'numeric',
-  });
+  }).replace(' ', ', ');
 
   // Hijri and location are currently driven by the header in pages/index.html.
   // Keep schedule card compact to avoid UI duplication/conflicts.
