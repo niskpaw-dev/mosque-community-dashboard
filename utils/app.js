@@ -1,4 +1,4 @@
-﻿import { CONFIG, getPrayerSchedule, getProgressPercent, formatDuration, getCurrentPrayer, getNextPrayer } from './prayer-utils.js';
+﻿import { getProgressPercent, formatDuration, getCurrentPrayer, getNextPrayer } from './prayer-utils.js';
 import { fetchPrayerTimes } from '../services/prayer-service.js';
 import { fetchWeather } from '../services/weather-service.js';
 import { getCurrentTime, getHijriDate } from '../services/time-service.js';
@@ -20,15 +20,46 @@ const state = {
 };
 
 const topInfo = {
+  // Legacy chips (new UI may not include these ids)
   currentTime: document.getElementById('currentTime'),
   hijriDate: document.getElementById('hijriDate'),
   weatherStatus: document.getElementById('weatherStatus'),
   masjidStatus: document.getElementById('masjidStatus')
 };
 
+const topDateEls = {
+  miladiHijriDate: document.getElementById('miladiHijriDate')
+};
+
+const focusEls = {
+  name: document.getElementById('currentPrayerName'),
+  time: document.getElementById('currentPrayerTime'),
+  currentPrayerList: document.getElementById('currentPrayerList'),
+};
+
+const ringEls = {
+  jam: document.getElementById('timerJam'),
+  minit: document.getElementById('timerMinit'),
+  saat: document.getElementById('timerSaat'),
+  cards: Array.from(document.querySelectorAll('.ring-card'))
+};
+
 function updateTopInfo() {
   const now = new Date();
 
+  // New top date section
+  if (topDateEls.miladiHijriDate) {
+    const miladi = now.toLocaleDateString('id-ID', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    });
+
+    const hijri = state.hijriDate || getHijriDate(now);
+    topDateEls.miladiHijriDate.textContent = `${miladi} Miladi | ${hijri} Hijri`;
+  }
+
+  // Legacy chips
   if (topInfo.currentTime) {
     topInfo.currentTime.textContent = getCurrentTime(now);
   }
@@ -48,11 +79,81 @@ function updateTopInfo() {
   }
 }
 
+function secondsToHMS(seconds) {
+  const clamped = Math.max(0, Math.floor(seconds));
+  const hours = Math.floor(clamped / 3600);
+  const minutes = Math.floor((clamped % 3600) / 60);
+  const sec = clamped % 60;
+  return { hours, minutes, seconds: sec };
+}
+
+function setRingProgress(cardEl, ratio01) {
+  const fg = cardEl.querySelector('.ring__fg');
+  if (!fg) return;
+
+  const r = Number(fg.getAttribute('r') || 48);
+  const circumference = 2 * Math.PI * r;
+  const pct = Math.min(1, Math.max(0, ratio01));
+
+  fg.style.strokeDasharray = `${circumference} ${circumference}`;
+  fg.style.strokeDashoffset = `${circumference * (1 - pct)}`;
+}
+
+function updateCurrentPrayerFocusAndCountdown() {
+  if (!state.prayerTimes || !state.nextPrayerTime) return;
+
+  const now = new Date();
+  const currentPrayer = getCurrentPrayer(state.prayerTimes, now);
+  const nextPrayer = getNextPrayer(state.prayerTimes, now);
+
+  // Focus section
+  if (focusEls.name) focusEls.name.textContent = currentPrayer.name
+    ? (currentPrayer.name === 'Fajr' ? 'Subuh'
+      : currentPrayer.name === 'Dhuhr' ? 'Zohor'
+        : currentPrayer.name === 'Asr' ? 'Asar'
+          : currentPrayer.name === 'Maghrib' ? 'Maghrib'
+            : currentPrayer.name === 'Isha' ? 'Isyak'
+              : currentPrayer.name)
+    : '--';
+
+  if (focusEls.time) {
+    focusEls.time.textContent = nextPrayer.date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
+  }
+
+  // Countdown rings: ratio based on remaining time in the current next prayer window.
+  const secondsLeft = Math.max(0, (state.nextPrayerTime - now) / 1000);
+  const { hours, minutes, seconds } = secondsToHMS(secondsLeft);
+
+  if (ringEls.jam) ringEls.jam.textContent = String(hours).padStart(2, '0');
+  if (ringEls.minit) ringEls.minit.textContent = String(minutes).padStart(2, '0');
+  if (ringEls.saat) ringEls.saat.textContent = String(seconds).padStart(2, '0');
+
+  // Best-effort ring progress: use percent of each unit relative to its max.
+  // - JAM: within nextPrayer interval up to 12h cap
+  // - MINIT: within 60
+  // - SAAT: within 60
+  const hourRatio = Math.min(1, hours / 12);
+  const minRatio = minutes / 60;
+  const secRatio = seconds / 60;
+
+  for (const cardEl of ringEls.cards) {
+    const kind = cardEl.getAttribute('data-ring');
+    if (kind === 'jam') setRingProgress(cardEl, hourRatio);
+    if (kind === 'minit') setRingProgress(cardEl, minRatio);
+    if (kind === 'saat') setRingProgress(cardEl, secRatio);
+  }
+}
+
 async function init() {
   console.log('Waktu Solat app start');
   renderHeader();
   renderAnnouncementCard('Memuat data solat...');
   renderStatusCard(state.masjidStatus);
+
   updateTopInfo();
 
   loadWeather();
@@ -69,19 +170,24 @@ async function loadPrayerTimes() {
     state.prayerTimes = prayerData.prayerTimes;
     state.hijriDate = prayerData.hijriDate;
     state.lastUpdated = new Date();
-    console.log('Prayer times loaded:', state.prayerTimes, 'Hijri:', state.hijriDate);
+
     calculatePrayerState();
     updateDashboard();
   } catch (error) {
     console.error('Prayer load failed:', error);
     renderPrayerCard({ error: true });
     renderStatusCard('Data tidak tersedia');
+
     if (document.getElementById('nextPrayer')) {
       document.getElementById('nextPrayer').textContent = 'Gagal muat data solat';
     }
     if (document.getElementById('countdown')) {
       document.getElementById('countdown').textContent = '--';
     }
+
+    if (ringEls.jam) ringEls.jam.textContent = '--';
+    if (ringEls.minit) ringEls.minit.textContent = '--';
+    if (ringEls.saat) ringEls.saat.textContent = '--';
   }
 }
 
@@ -98,7 +204,6 @@ async function loadWeather() {
 
 function calculatePrayerState() {
   const now = new Date();
-
   if (!state.prayerTimes) return;
 
   const currentPrayer = getCurrentPrayer(state.prayerTimes, now);
@@ -114,8 +219,15 @@ function calculatePrayerState() {
 }
 
 function updateDashboard() {
+  // Legacy schedule/list rendering (kept for now)
   const progress = renderPrayerCard(state);
-  renderProgressBar(progress);
+  if (typeof progress === 'number') {
+    renderProgressBar(progress);
+  }
+
+  // New UI: focus + rings countdown
+  updateCurrentPrayerFocusAndCountdown();
+
   renderStatusCard(state.masjidStatus);
   updateLastUpdated();
 }
@@ -127,7 +239,7 @@ function startCountdown() {
     if (!state.nextPrayerTime) return;
 
     const now = new Date();
-    if (now >= state.nextPrayerTime || now.getDate() !== state.nextPrayerTime.getDate()) {
+    if (now >= state.nextPrayerTime || (now.getDate() !== state.nextPrayerTime.getDate())) {
       calculatePrayerState();
       state.lastUpdated = new Date();
       updateLastUpdated();
@@ -157,3 +269,4 @@ window.addEventListener('error', (event) => {
 window.addEventListener('unhandledrejection', (event) => {
   console.error('Unhandled rejection:', event.reason);
 });
+

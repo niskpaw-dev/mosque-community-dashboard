@@ -23,6 +23,11 @@
 
   --fs-hero-title: clamp(1.5rem, 2.2vw, 2rem);
   --fs-countdown: clamp(2.4rem, 4vw, 3.4rem);
+
+  /* Gold palette */
+  --gold: #D4A017;
+  --gold-dark: #8B6B15;
+  --white: #F5F5F5;
 }
 
 body {
@@ -30,8 +35,8 @@ body {
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   color: var(--text);
 
-  background: radial-gradient(circle at top left, rgba(59,130,246,0.16), transparent 28%),
-              linear-gradient(180deg, #020617 0%, #0b1220 100%);
+  background: radial-gradient(circle at top left, rgba(59, 130, 246, 0.16), transparent 28%),
+    linear-gradient(180deg, #020617 0%, #0b1220 100%);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -40,8 +45,8 @@ body::before {
   content: "";
   position: fixed;
   inset: 0;
-  background-image: radial-gradient(circle at 25% 20%, rgba(56,189,248,0.14), transparent 22%),
-                    radial-gradient(circle at 80% 12%, rgba(14,165,233,0.10), transparent 18%);
+  background-image: radial-gradient(circle at 25% 20%, rgba(56, 189, 248, 0.14), transparent 22%),
+    radial-gradient(circle at 80% 12%, rgba(14, 165, 233, 0.10), transparent 18%);
   pointer-events: none;
   z-index: -1;
   animation: ambientGlow 14s ease-in-out infinite;
@@ -51,10 +56,10 @@ body::after {
   content: "";
   position: fixed;
   inset: 0;
-  background-image: radial-gradient(circle at 16% 12%, rgba(255,255,255,0.04), transparent 12%),
-                    radial-gradient(circle at 86% 84%, rgba(99,102,241,0.03), transparent 14%),
-                    radial-gradient(circle at 50% 88%, rgba(255,255,255,0.025), transparent 18%),
-                    linear-gradient(90deg, transparent 32%, rgba(255,255,255,0.02) 32%, rgba(255,255,255,0.02) 68%, transparent 68%);
+  background-image: radial-gradient(circle at 16% 12%, rgba(255, 255, 255, 0.04), transparent 12%),
+    radial-gradient(circle at 86% 84%, rgba(99, 102, 241, 0.03), transparent 14%),
+    radial-gradient(circle at 50% 88%, rgba(255, 255, 255, 0.025), transparent 18%),
+    linear-gradient(90deg, transparent 32%, rgba(255, 255, 255, 0.02) 32%, rgba(255, 255, 255, 0.02) 68%, transparent 68%);
   pointer-events: none;
   opacity: 0.85;
   z-index: -1;
@@ -64,62 +69,102 @@ body::after {
 .page-shell {
   width: min(1180px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 32px 0;
+  padding: 18px 0 32px;
 }
 
-.topbar {
-  position: relative;
+/* =====================
+   Top Date Section
+===================== */
+.top-date {
+  width: 100%;
   display: flex;
-  flex-direction: column;
-  gap: 14px;
-  margin-bottom: 24px;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 0 22px;
+  text-align: center;
+  position: relative;
 }
 
-.topbar::after {
-  content: "";
+.top-date__glow {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -14px;
-  height: 1px;
-  background: linear-gradient(90deg, rgba(125,211,252,0.18), rgba(148,163,184,0.06));
+  inset: -16px -24px;
+  background:
+    radial-gradient(circle at 50% 20%, rgba(212, 160, 23, 0.18), transparent 45%),
+    radial-gradient(circle at 30% 80%, rgba(139, 107, 21, 0.12), transparent 55%);
+  filter: blur(10px);
+  pointer-events: none;
 }
 
-.info-row {
+.top-date__text {
+  position: relative;
+  padding: 18px 22px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(212, 160, 23, 0.18);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 18px 60px rgba(0, 0, 0, 0.20);
+  backdrop-filter: blur(16px);
+}
+
+.top-date__value {
+  font-size: clamp(1.0rem, 2.2vw, 1.35rem);
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  color: var(--white);
+  text-shadow: 0 0 22px rgba(212, 160, 23, 0.18);
+}
+
+.top-date__subtitle {
+  margin-top: 6px;
+  font-size: 0.82rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 245, 0.78);
+}
+
+/* =====================
+   Dashboard layout
+===================== */
+.dashboard {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 16px;
-  margin-bottom: 28px;
+  grid-template-columns: minmax(0, 2.4fr) minmax(260px, 1fr);
+  gap: 22px;
 }
 
-.info-chip {
-  background: var(--chip-bg);
+.card {
+  background: var(--card-bg);
   border: 1px solid var(--card-border);
-  border-radius: var(--radius-lg);
-  padding: 18px 20px;
+  border-radius: var(--radius-xl);
+  padding: var(--pad-card);
+  backdrop-filter: blur(18px);
 
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
   transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
-.info-chip:hover {
-  transform: translateY(-1px);
-  border-color: rgba(96,165,250,0.18);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 6px 18px rgba(0,0,0,0.08);
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.18);
+  border-color: rgba(96, 165, 250, 0.18);
 }
 
-.info-label {
-  font-size: 0.75rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: #94a3b8;
-  margin-bottom: 10px;
+.hero-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 420px;
+  padding: 28px;
+  animation: softPulse 10s ease-in-out infinite;
+  border: 1px solid rgba(212, 160, 23, 0.10);
 }
 
-.info-value {
-  font-size: 1rem;
-  font-weight: 700;
-  color: #f8fafc;
+.hero-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
 }
 
 .eyebrow {
@@ -131,122 +176,9 @@ body::after {
   margin-bottom: 6px;
 }
 
-h1 {
-  font-size: clamp(2rem, 2.5vw, 3rem);
-  line-height: 1.05;
-  max-width: 760px;
-}
-
-.subline {
-  color: #94a3b8;
-  font-size: 0.95rem;
-  max-width: 720px;
-  opacity: 0.93;
-}
-
-.dashboard {
-  display: grid;
-  grid-template-columns: minmax(0, 2.4fr) minmax(260px, 1fr);
-  gap: 24px;
-}
-
-.card {
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: var(--radius-xl);
-  padding: var(--pad-card);
-
-  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
-  backdrop-filter: blur(18px);
-  transition: all 0.3s ease;
-}
-
-.card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 16px 50px rgba(0,0,0,0.18);
-  border-color: rgba(96,165,250,0.18);
-}
-
-.side-card {
-  box-shadow: 0 14px 38px rgba(0,0,0,0.14);
-}
-
-.hero-card {
-  --status-border: rgba(148,163,184,0.12);
-  --pill-rgb: 56,189,248;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 420px;
-  padding: 36px;
-  animation: softPulse 10s ease-in-out infinite;
-  border: 1px solid var(--status-border);
-  box-shadow: 0 30px 90px rgba(0,0,0,0.24);
-}
-
-.hero-card.status-fajr {
-  --status-border: rgba(56,189,248,0.22);
-  --pill-rgb: 56,189,248;
-}
-
-.hero-card.status-maghrib {
-  --status-border: rgba(249,115,22,0.22);
-  --pill-rgb: 249,115,22;
-}
-
-.hero-card.status-isha {
-  --status-border: rgba(79,70,229,0.22);
-  --pill-rgb: 79,70,229;
-}
-
-.hero-card.status-default {
-  --status-border: rgba(148,163,184,0.12);
-  --pill-rgb: 56,189,248;
-}
-
-.hero-header,
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 16px;
-  margin-bottom: 28px;
-}
-
-.hero-header h2,
-.card-header h2 {
-  font-size: 1.3rem;
-  letter-spacing: -0.03em;
-}
-
 .hero-body {
   display: grid;
-  gap: 14px;
-}
-
-.current-prayer-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 18px;
-}
-
-.prayer-pill {
-  padding: 0.65rem 0.95rem;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.08);
-  color: #cbd5e1;
-  font-size: 0.87rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  transition: all 0.25s ease;
-}
-
-.prayer-pill.active {
-  background: rgba(56,189,248,0.18);
-  color: #f8fafc;
-  box-shadow: 0 0 20px rgba(56,189,248,0.18);
-  animation: highlightPulse 1.1s ease;
+  gap: 16px;
 }
 
 .hero-label {
@@ -256,19 +188,157 @@ h1 {
   color: #94a3b8;
 }
 
-#nextPrayer {
-  font-size: var(--fs-hero-title);
-  font-weight: 700;
-  color: #f8fafc;
-  margin-bottom: 6px;
+/* =====================
+   Current Prayer Focus + Countdown
+===================== */
+.current-prayer-focus {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 2px 0;
 }
 
-#countdown {
-  font-size: var(--fs-countdown);
+.current-prayer-focus__name {
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-size: clamp(2.2rem, 6vw, 4.2rem);
+  font-weight: 950;
+  letter-spacing: 0.01em;
+  color: var(--white);
+  text-shadow: 0 0 26px rgba(212, 160, 23, 0.18), 0 2px 0 rgba(0, 0, 0, 0.25);
+}
 
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  color: #ffffff;
+.current-prayer-focus__time {
+  font-size: clamp(1.4rem, 4vw, 2.5rem);
+  font-weight: 850;
+  color: rgba(245, 245, 245, 0.95);
+  padding: 10px 16px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(212, 160, 23, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.countdown-ring-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  align-items: center;
+}
+
+.ring-card {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(212, 160, 23, 0.35);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(14px);
+  overflow: hidden;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.ring-card::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(135deg, rgba(212, 160, 23, 0.85), rgba(139, 107, 21, 0.12));
+  opacity: 0.12;
+  pointer-events: none;
+}
+
+.ring-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(212, 160, 23, 0.55);
+  box-shadow: 0 26px 80px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.ring {
+  width: 100%;
+  height: 100%;
+}
+
+.ring__bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.08);
+  stroke-width: 10;
+}
+
+.ring__fg {
+  fill: none;
+  stroke-width: 10;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: 60px 60px;
+}
+
+.ring-card[data-ring="jam"] .ring__fg {
+  stroke: rgba(212, 160, 23, 0.95);
+}
+
+.ring-card[data-ring="minit"] .ring__fg {
+  stroke: rgba(212, 160, 23, 0.80);
+}
+
+.ring-card[data-ring="saat"] .ring__fg {
+  stroke: rgba(139, 107, 21, 0.95);
+}
+
+.ring-card__content {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  padding: 10px;
+  text-align: center;
+}
+
+.ring-card__value {
+  font-size: clamp(1.5rem, 4.5vw, 2.6rem);
+  font-weight: 950;
+  color: var(--white);
+  text-shadow: 0 0 26px rgba(212, 160, 23, 0.18);
+  margin-top: 4px;
+}
+
+.ring-card__label {
+  margin-top: 4px;
+  font-size: 0.78rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 245, 0.72);
+}
+
+.fade-in {
+  animation: fadeInUp 0.65s ease both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.active-prayer-pulse {
+  animation: activePulse 1.2s ease-in-out infinite;
+}
+
+@keyframes activePulse {
+  0%,
+  100% {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.10),
+      0 18px 60px rgba(0, 0, 0, 0.25);
+  }
+  50% {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
+      0 28px 90px rgba(212, 160, 23, 0.16);
+  }
 }
 
 .last-updated {
@@ -278,34 +348,15 @@ h1 {
   opacity: 0.85;
 }
 
-.pill {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(var(--pill-rgb), 0.14);
-  color: rgb(var(--pill-rgb));
-  padding: 0.65rem 1rem;
-  border-radius: 999px;
-  font-size: 0.85rem;
-  letter-spacing: 0.08em;
-}
-
-.progress-block {
-  display: grid;
-  gap: 12px;
-}
-
-.progress-meta {
-  color: #94a3b8;
-  font-size: 0.95rem;
-}
-
+/* =====================
+   Additional info (existing cards)
+===================== */
 .schedule-card {
   display: grid;
   gap: 18px;
-  background: rgba(15,23,42,0.88);
-  border: 1px solid rgba(148,163,184,0.10);
-  box-shadow: 0 24px 60px rgba(15,23,42,0.28);
+  background: rgba(15, 23, 42, 0.88);
+  border: 1px solid rgba(148, 163, 184, 0.10);
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.28);
   border-radius: 28px;
   padding: 28px;
 }
@@ -329,13 +380,13 @@ h1 {
   color: #e2e8f0;
   font-size: 0.96rem;
   padding: 10px 0;
-  border-bottom: 1px solid rgba(148,163,184,0.08);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.08);
   transition: background 0.9s ease, color 0.9s ease, border-color 0.9s ease, padding-left 0.9s ease;
 }
 
 .schedule-row.active {
-  background: rgba(56,189,248,0.14);
-  border-left: 3px solid rgba(56,189,248,0.85);
+  background: rgba(212, 160, 23, 0.12);
+  border-left: 3px solid rgba(212, 160, 23, 0.85);
   padding-left: 14px;
   color: #f8fafc;
   animation: highlightPulse 1.1s ease;
@@ -345,72 +396,46 @@ h1 {
   border-bottom: none;
 }
 
-.schedule-row.active {
-  background: rgba(56,189,248,0.14);
-  border-left: 3px solid rgba(56,189,248,0.85);
-  padding-left: 14px;
-  color: #f8fafc;
+.current-prayer-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
-.page-shell {
-  width: min(1180px, calc(100% - 48px));
-  display: grid;
-  gap: 28px;
-  animation: ambientGlow 22s ease-in-out infinite;
-}
-
-.progress {
-  background: rgba(255,255,255,0.08);
+.prayer-pill {
+  padding: 0.65rem 0.95rem;
   border-radius: 999px;
-  height: 12px;
-  overflow: hidden;
+  background: rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+  font-size: 0.87rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  transition: all 0.25s ease;
 }
 
-#progressBar {
-  width: 0%;
-  height: 100%;
-  background: linear-gradient(90deg, #38bdf8, #60a5fa);
-  box-shadow: 0 0 18px rgba(56,189,248,0.22);
-  transition: width 1s linear, background 0.35s ease, box-shadow 0.35s ease;
+.prayer-pill.active {
+  background: rgba(212, 160, 23, 0.18);
+  color: #f8fafc;
+  box-shadow: 0 0 20px rgba(212, 160, 23, 0.18);
+  animation: highlightPulse 1.1s ease;
 }
 
-.hero-card.status-fajr #progressBar {
-  background: linear-gradient(90deg, rgba(56,189,248,1), rgba(96,165,250,1));
-  box-shadow: 0 0 22px rgba(56,189,248,0.26);
+.side-card {
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.14);
 }
-
-.hero-card.status-maghrib #progressBar {
-  background: linear-gradient(90deg, rgba(249,115,22,1), rgba(251,191,36,1));
-  box-shadow: 0 0 22px rgba(249,115,22,0.22);
-}
-
-.hero-card.status-isha #progressBar {
-  background: linear-gradient(90deg, rgba(79,70,229,1), rgba(139,92,246,1));
-  box-shadow: 0 0 22px rgba(79,70,229,0.22);
-}
-
 
 .side-card p {
   color: #cbd5e1;
   line-height: 1.8;
 }
 
+/* =====================
+   Responsive
+===================== */
 @media (max-width: 900px) {
   .dashboard {
     grid-template-columns: 1fr;
     gap: 20px;
-  }
-
-  .topbar {
-    gap: 12px;
-  }
-
-  .info-row {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .schedule-card {
-    grid-column: span 1;
   }
 }
 
@@ -428,28 +453,22 @@ h1 {
   }
 
   .hero-body {
-    gap: 10px;
+    gap: 12px;
   }
 
-  #nextPrayer {
-    font-size: 1.4rem;
+  .countdown-ring-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
   }
 
-  #countdown {
-    font-size: 1.8rem;
-  }
-
-  .current-prayer-list {
-    gap: 8px;
-  }
-
-  .schedule-card {
-    padding: 24px;
+  .current-prayer-focus__name {
+    font-size: clamp(2rem, 9vw, 3.2rem);
   }
 }
 
 @keyframes ambientGlow {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     opacity: 0.92;
   }
@@ -473,25 +492,27 @@ h1 {
 }
 
 @keyframes softPulse {
-  0%, 100% {
-    box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+  0%,
+  100% {
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
   }
 
   50% {
-    box-shadow: 0 22px 72px rgba(56,189,248,0.16);
+    box-shadow: 0 22px 72px rgba(56, 189, 248, 0.16);
   }
 }
 
 @keyframes highlightPulse {
   0% {
-    box-shadow: 0 0 0 rgba(56,189,248,0);
+    box-shadow: 0 0 0 rgba(56, 189, 248, 0);
   }
 
   50% {
-    box-shadow: 0 0 24px rgba(56,189,248,0.12);
+    box-shadow: 0 0 24px rgba(56, 189, 248, 0.12);
   }
 
   100% {
-    box-shadow: 0 0 0 rgba(56,189,248,0);
+    box-shadow: 0 0 0 rgba(56, 189, 248, 0);
   }
 }
+
