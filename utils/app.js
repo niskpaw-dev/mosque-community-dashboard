@@ -1,4 +1,5 @@
-﻿import { getProgressPercent, formatDuration, getCurrentPrayer, getNextPrayer } from './prayer-utils.js';
+﻿import { CONFIG, getProgressPercent, formatDuration, getCurrentPrayer, getNextPrayer } from './prayer-utils.js';
+
 import { fetchPrayerTimes } from '../services/prayer-service.js';
 import { fetchWeather } from '../services/weather-service.js';
 import { getCurrentTime, getHijriDate } from '../services/time-service.js';
