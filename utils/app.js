@@ -1,12 +1,11 @@
-import { CONFIG, getProgressPercent, formatDuration, getCurrentPrayer, getNextPrayer } from './prayer-utils.js';
+﻿import { CONFIG, getCurrentPrayer, getNextPrayer } from './prayer-utils.js';
 
 import { fetchPrayerTimes } from '../services/prayer-service.js';
 import { fetchWeather } from '../services/weather-service.js';
 import { getCurrentTime, getHijriDate } from '../services/time-service.js';
 import { getMasjidStatus, getDynamicAnnouncement } from '../services/status-service.js';
 import { renderHeader } from '../components/Header.js';
-import { renderPrayerCard } from '../components/PrayerCard.js';
-import { renderProgressBar } from '../components/ProgressBar.js';
+import { renderScheduleGrid } from '../components/PrayerCard.js';
 import { renderAnnouncementCard } from '../components/AnnouncementCard.js';
 import { renderStatusCard } from '../components/StatusCard.js';
 
@@ -130,6 +129,7 @@ function updatePrayerZonesAndCountdown() {
   }
 
   // 3) COUNTDOWN TO NEXT PRAYER (always target nextPrayerTime)
+  // Guard: when API uses exact minute boundaries, nextPrayerTime can equal 'now' very briefly.
   const secondsLeft = Math.max(0, (state.nextPrayerTime - now) / 1000);
   const { hours, minutes, seconds } = secondsToHMS(secondsLeft);
 
@@ -178,8 +178,8 @@ async function loadPrayerTimes() {
     updateDashboard();
   } catch (error) {
     console.error('Prayer load failed:', error);
-    renderPrayerCard({ error: true });
     renderStatusCard('Data tidak tersedia');
+
 
     if (document.getElementById('nextPrayer')) {
       document.getElementById('nextPrayer').textContent = 'Gagal muat data solat';
@@ -222,15 +222,15 @@ function calculatePrayerState() {
 }
 
 function updateDashboard() {
-  // Legacy schedule/list rendering (kept for now)
-  const progress = renderPrayerCard(state);
-  if (typeof progress === 'number') {
-    renderProgressBar(progress);
-  }
-
   // New UI: focus + rings countdown
   updatePrayerZonesAndCountdown();
 
+  // Schedule card: highlight CURRENT ACTIVE prayer row only
+  if (state.prayerTimes) {
+    const now = new Date();
+    const currentPrayer = getCurrentPrayer(state.prayerTimes, now);
+    renderScheduleGrid(state.prayerTimes, now, currentPrayer.name);
+  }
 
   renderStatusCard(state.masjidStatus);
   updateLastUpdated();
