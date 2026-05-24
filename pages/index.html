@@ -4,10 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../styles/style.css">
+  <link rel="stylesheet" href="../styles/prayer-future-glass.css">
+
   <title>Waktu Solat Dashboard</title>
 </head>
 <body>
   <div class="page-shell">
+    <div class="hero-floating-ambient" aria-hidden="true"></div>
+
     <header class="top-date">
       <div class="top-date__glow" aria-hidden="true"></div>
 
@@ -28,14 +32,22 @@
         </div>
 
         <div class="hero-body">
-          <p class="hero-label">Waktu seterusnya</p>
-
-          <div class="current-prayer-focus">
-            <div class="current-prayer-focus__name" id="currentPrayerName">Subuh</div>
-            <div class="current-prayer-focus__time" id="currentPrayerTime">05:49 AM</div>
+          <div class="hero-top-status" aria-label="Prayer active status">
+            <div class="hero-top-status__label">SEDANG BERLANGSUNG</div>
+            <div class="hero-top-status__badge" id="activePrayerBadge">—</div>
           </div>
 
-          <div class="countdown-ring-grid" aria-label="Countdown timers">
+          <div class="hero-next" aria-label="Next upcoming prayer">
+            <div class="hero-next__label">WAKTU SOLAT SETERUSNYA</div>
+            <div class="hero-next__name" id="nextPrayerFocus">—</div>
+            <div class="hero-next__time" id="nextPrayerTimeFocus">--:--</div>
+          </div>
+
+          <div class="hero-next-time-ghost" aria-hidden="true"></div>
+
+
+          <div class="countdown-ring-grid" aria-label="Countdown to next prayer">
+
             <div class="ring-card" data-ring="jam">
               <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
                 <circle class="ring__bg" cx="60" cy="60" r="48" />
@@ -71,7 +83,8 @@
           </div>
 
           <p id="lastUpdated" class="last-updated">Dikemaskini --</p>
-          <div id="currentPrayerList" class="current-prayer-list" aria-label="Current prayer sequence"></div>
+          <div id="currentPrayerList" class="current-prayer-list" aria-label="Prayer shortcuts"></div>
+
         </div>
       </section>
 
