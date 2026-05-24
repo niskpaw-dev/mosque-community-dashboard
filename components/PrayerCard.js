@@ -59,10 +59,16 @@ function renderScheduleGrid(schedule, activeName) {
 
   elements.scheduleGrid.innerHTML = `
     <div class="schedule-header">
-      <span>Solat</span>
-      <span>Waktu</span>
+      <div class="schedule-header__titles">
+        <div class="schedule-title">Jadual Solat</div>
+        <div class="schedule-subtitle" id="scheduleSubtitle">${new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })} • Hijri</div>
+      </div>
+      <div class="schedule-header__meta">Masjid • Kuala Langat</div>
     </div>
-    ${rows}
+    <div class="schedule-divider" aria-hidden="true"></div>
+    <div class="schedule-body">
+      ${rows}
+    </div>
   `;
 }
 
@@ -89,9 +95,11 @@ export function renderPrayerCard(state) {
   }
 
   if (elements.pill) {
+    // Active prayer: should correspond to the focus prayer (state.currentPrayerName)
     const currentLabel = CONFIG.translation[currentPrayerName] || currentPrayerName;
     elements.pill.textContent = `Aktif: ${currentLabel}`;
   }
+
 
   applyPrayerStatus(currentPrayerName);
   renderCurrentPrayerList(getPrayerSchedule(prayerTimes, new Date()), currentPrayerName);
