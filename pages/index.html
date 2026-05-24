@@ -1,116 +1,117 @@
-﻿<!DOCTYPE html>
+﻿<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../styles/style.css">
-  <link rel="stylesheet" href="../styles/prayer-future-glass.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../styles/style.css" />
+    <link rel="stylesheet" href="../styles/prayer-future-glass.css" />
 
-  <title>Waktu Solat Dashboard</title>
-</head>
-<body>
-  <div class="page-shell">
-    <div class="hero-floating-ambient" aria-hidden="true"></div>
+    <title>Waktu Solat Dashboard</title>
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="hero-floating-ambient" aria-hidden="true"></div>
 
-    <header class="top-date">
-      <div class="top-date__glow" aria-hidden="true"></div>
+      <header class="top-date">
+        <div class="top-date__glow" aria-hidden="true"></div>
 
-      <div class="top-date__text">
-        <div class="top-date__value" id="miladiHijriDate">Loading...</div>
-        <div class="top-date__subtitle">Waktu Solat Seterusnya</div>
-      </div>
-    </header>
-
-    <main class="dashboard">
-      <section class="card hero-card waktu-solat">
-        <div class="hero-header">
-          <div>
-            <p class="eyebrow">Seterusnya</p>
-            <h2>⏰ Waktu Solat Sekarang</h2>
-          </div>
-          <span class="pill" id="prayerStatusPill">Aktif</span>
+        <div class="top-date__text">
+          <div class="top-date__value" id="miladiHijriDate">Loading...</div>
+          <div class="top-date__subtitle">Waktu Solat Seterusnya</div>
         </div>
+      </header>
 
-        <div class="hero-body">
-          <div class="hero-top-status" aria-label="Prayer active status">
-            <div class="hero-top-status__label">SEDANG BERLANGSUNG</div>
-            <div class="hero-top-status__badge" id="activePrayerBadge">—</div>
+      <main class="dashboard">
+        <section class="card hero-card waktu-solat">
+          <div class="hero-header">
+            <div>
+              <p class="eyebrow">Seterusnya</p>
+              <h2>⏰ Waktu Solat Sekarang</h2>
+            </div>
+            <span class="pill" id="prayerStatusPill">Aktif</span>
           </div>
 
-          <div class="hero-next" aria-label="Next upcoming prayer">
-            <div class="hero-next__label">WAKTU SOLAT SETERUSNYA</div>
-            <div class="hero-next__name" id="nextPrayerFocus">—</div>
-            <div class="hero-next__time" id="nextPrayerTimeFocus">--:--</div>
-          </div>
+          <div class="hero-body">
+            <div class="hero-top-status" aria-label="Prayer active status">
+              <div class="hero-top-status__label">SEDANG BERLANGSUNG</div>
+              <div class="hero-top-status__badge" id="activePrayerBadge">—</div>
+            </div>
 
-          <div class="hero-next-time-ghost" aria-hidden="true"></div>
+            <div class="hero-next" aria-label="Next upcoming prayer">
+              <div class="hero-next__label">WAKTU SOLAT SETERUSNYA</div>
+              <div class="hero-next__name" id="nextPrayerFocus">—</div>
+              <div class="hero-next__time" id="nextPrayerTimeFocus">--:--</div>
+            </div>
 
+            <div class="hero-next-time-ghost" aria-hidden="true"></div>
 
-          <div class="countdown-ring-grid" aria-label="Countdown to next prayer">
+            <div
+              class="countdown-ring-grid"
+              aria-label="Countdown to next prayer"
+            >
+              <div class="ring-card" data-ring="jam">
+                <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
+                  <circle class="ring__bg" cx="60" cy="60" r="48" />
+                  <circle class="ring__fg" cx="60" cy="60" r="48" />
+                </svg>
+                <div class="ring-card__content">
+                  <div class="ring-card__value" id="timerJam">--</div>
+                  <div class="ring-card__label">JAM</div>
+                </div>
+              </div>
 
-            <div class="ring-card" data-ring="jam">
-              <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
-                <circle class="ring__bg" cx="60" cy="60" r="48" />
-                <circle class="ring__fg" cx="60" cy="60" r="48" />
-              </svg>
-              <div class="ring-card__content">
-                <div class="ring-card__value" id="timerJam">--</div>
-                <div class="ring-card__label">JAM</div>
+              <div class="ring-card" data-ring="minit">
+                <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
+                  <circle class="ring__bg" cx="60" cy="60" r="48" />
+                  <circle class="ring__fg" cx="60" cy="60" r="48" />
+                </svg>
+                <div class="ring-card__content">
+                  <div class="ring-card__value" id="timerMinit">--</div>
+                  <div class="ring-card__label">MINIT</div>
+                </div>
+              </div>
+
+              <div class="ring-card" data-ring="saat">
+                <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
+                  <circle class="ring__bg" cx="60" cy="60" r="48" />
+                  <circle class="ring__fg" cx="60" cy="60" r="48" />
+                </svg>
+                <div class="ring-card__content">
+                  <div class="ring-card__value" id="timerSaat">--</div>
+                  <div class="ring-card__label">SAAT</div>
+                </div>
               </div>
             </div>
 
-            <div class="ring-card" data-ring="minit">
-              <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
-                <circle class="ring__bg" cx="60" cy="60" r="48" />
-                <circle class="ring__fg" cx="60" cy="60" r="48" />
-              </svg>
-              <div class="ring-card__content">
-                <div class="ring-card__value" id="timerMinit">--</div>
-                <div class="ring-card__label">MINIT</div>
-              </div>
-            </div>
-
-            <div class="ring-card" data-ring="saat">
-              <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
-                <circle class="ring__bg" cx="60" cy="60" r="48" />
-                <circle class="ring__fg" cx="60" cy="60" r="48" />
-              </svg>
-              <div class="ring-card__content">
-                <div class="ring-card__value" id="timerSaat">--</div>
-                <div class="ring-card__label">SAAT</div>
-              </div>
-            </div>
+            <p id="lastUpdated" class="last-updated">Dikemaskini --</p>
+            <div
+              id="currentPrayerList"
+              class="current-prayer-list"
+              aria-label="Prayer shortcuts"
+            ></div>
           </div>
+        </section>
 
-          <p id="lastUpdated" class="last-updated">Dikemaskini --</p>
-          <div id="currentPrayerList" class="current-prayer-list" aria-label="Prayer shortcuts"></div>
+        <section class="card schedule-card">
+          <div class="schedule-grid" id="prayerSchedule"></div>
+        </section>
 
-        </div>
-      </section>
+        <section class="card side-card">
+          <div class="card-header">
+            <h2>📢 Pengumuman</h2>
+          </div>
+          <p id="announcementText">Memuat pengumuman solat...</p>
+        </section>
 
-      <section class="card schedule-card">
-        <div class="card-header">
-          <h2>Jadual Solat</h2>
-        </div>
-        <div class="schedule-grid" id="prayerSchedule"></div>
-      </section>
+        <section class="card side-card">
+          <div class="card-header">
+            <h2>📊 Status Masjid</h2>
+          </div>
+          <p id="statusText">Menunggu status masjid...</p>
+        </section>
+      </main>
+    </div>
 
-      <section class="card side-card">
-        <div class="card-header">
-          <h2>📢 Pengumuman</h2>
-        </div>
-        <p id="announcementText">Memuat pengumuman solat...</p>
-      </section>
-
-      <section class="card side-card">
-        <div class="card-header">
-          <h2>📊 Status Masjid</h2>
-        </div>
-        <p id="statusText">Menunggu status masjid...</p>
-      </section>
-    </main>
-  </div>
-
-  <script type="module" src="../utils/app.js"></script>
-</body>
+    <script type="module" src="../utils/app.js"></script>
+  </body>
 </html>

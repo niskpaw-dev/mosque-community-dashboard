@@ -1,16 +1,18 @@
-# TODO — Prayer Dashboard Refactor (Premium Smart Display)
+# TODO
 
-- [x] Update `pages/index.html` hero area markup to match 3-zone UX:
-  - [x] CURRENT ACTIVE PRAYER ("SEDANG BERLANGSUNG" + badge)
-  - [x] NEXT UPCOMING PRAYER ("WAKTU SOLAT SETERUSNYA" + big prayer name + time)
-  - [x] COUNTDOWN TO NEXT PRAYER (rings with JAM/MINIT/SAAT)
+- [x] Remove duplicate/static “Jadual Solat” header from schedule card in `index.html` and `pages/index.html` (leave only `#prayerSchedule`).
 
-- [ ] Update `utils/app.js` to populate:
-  - [ ] current active prayer badge = `state.currentPrayerName`
-  - [ ] next upcoming prayer = `state.nextPrayerName` + `state.nextPrayerTime`
-  - [ ] countdown rings = time remaining until `state.nextPrayerTime`
-  - [ ] remove/avoid misleading mapping that currently writes currentPrayer.name into the hero
-- [x] Update `components/PrayerCard.js` active row highlighting to reflect CURRENT ACTIVE PRAYER only
+- [x] Refactor `renderScheduleGrid()` in `components/PrayerCard.js` to render:
+  - [ ] Single title (no duplicates)
+  - [ ] Date info below title
+  - [ ] Compact location chip below date
+  - [x] Prayer rows with correct active row styling
+- [x] Update/extend `styles/style.css` to match futuristic glassmorphism smart-display requirements (spacing, typography hierarchy, overflow safety, chip + row + active shimmer).
 
-- [ ] Update `styles/style.css` with premium glassmorphism/futuristic hierarchy for new hero elements
-- [ ] Manual test: with real fetched prayer times verify labels never swap (current ≠ next) and countdown always targets next prayer
+- [x] Validate in browser: no overlapping, correct hierarchy, no glow overflow, active prayer row stands out.
+
+- [x] Refactor `utils/app.js` to remove legacy `renderPrayerCard()` + `renderProgressBar()` from the main update loop (avoid mixing current/next & duplicate renders).
+
+- [x] Ensure schedule card rendering is done from the correct state (highlight CURRENT active prayer row only), without modifying NEXT focus or countdown.
+
+- [ ] Sanity-check prayer-state edge cases (when now is exactly at boundary) so countdown never goes negative and state recalculates cleanly.
