@@ -51,7 +51,7 @@ function updateTopInfo() {
 
   // New top date section
   if (topDateEls.miladiHijriDate) {
-    const miladi = now.toLocaleDateString('id-ID', {
+    const miladi = now.toLocaleDateString('id-MY', {
       day: '2-digit',
       month: 'short',
       year: 'numeric'
