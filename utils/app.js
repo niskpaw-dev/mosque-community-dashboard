@@ -1,4 +1,4 @@
-﻿import { CONFIG, getCurrentPrayer, getNextPrayer } from './prayer-utils.js';
+﻿﻿import { CONFIG, getCurrentPrayer, getNextPrayer } from './prayer-utils.js';
 
 import { fetchPrayerTimes } from '../services/prayer-service.js';
 import { fetchWeather } from '../services/weather-service.js';
@@ -51,7 +51,7 @@ function updateTopInfo() {
 
   // New top date section
   if (topDateEls.miladiHijriDate) {
-    const miladi = now.toLocaleDateString('id-MY', {
+    const miladi = now.toLocaleDateString('ms-MY', {
       day: '2-digit',
       month: 'short',
       year: 'numeric'
@@ -273,4 +273,3 @@ window.addEventListener('error', (event) => {
 window.addEventListener('unhandledrejection', (event) => {
   console.error('Unhandled rejection:', event.reason);
 });
-

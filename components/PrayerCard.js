@@ -7,7 +7,7 @@ const elements = {
 function renderScheduleGridContent(schedule, activeName) {
   if (!elements.scheduleGrid) return;
 
-  const miladi = new Date().toLocaleDateString('id-ID', {
+  const miladi = new Date().toLocaleDateString('ms-MY', {
     weekday: 'long',
     day: '2-digit',
     month: 'short',
@@ -77,7 +77,3 @@ export function renderScheduleGrid(prayerTimes, now, activePrayerName) {
   // No extra heading: the schedule card already defines layout.
   renderScheduleGridContent(schedule, activePrayerName);
 }
-
-
-
-
