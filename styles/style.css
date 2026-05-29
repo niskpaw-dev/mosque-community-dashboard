@@ -27,7 +27,68 @@
   /* Gold palette */
   --gold: #D4A017;
   --gold-dark: #8B6B15;
+  --gold-rgb: 212, 160, 23;
   --white: #F5F5F5;
+
+  /* Warna Tema Dinamik (Gelang Countdown) */
+  --ring-rgb: 212, 160, 23;
+  --ring-rgb-dark: 139, 107, 21;
+}
+
+/* Tema Gelang: Imsak & Subuh (Ungu / Indigo) */
+body[data-next-prayer="Imsak"],
+body[data-next-prayer="Fajr"] {
+  --ring-rgb: 99, 102, 241;
+  --ring-rgb-dark: 67, 56, 202;
+}
+
+/* Tema Gelang: Syuruk (Jingga / Amber) */
+body[data-next-prayer="Syuruk"] {
+  --ring-rgb: 245, 158, 11;
+  --ring-rgb-dark: 180, 83, 9;
+}
+
+/* Tema Gelang: Zawal (Merah / Amaran) */
+body[data-next-prayer="Zawal"] {
+  --ring-rgb: 239, 68, 68;
+  --ring-rgb-dark: 185, 28, 28;
+}
+
+/* Tema Gelang: Maghrib (Merah Keorenan / Senja) */
+body[data-next-prayer="Maghrib"] {
+  --ring-rgb: 244, 81, 30;
+  --ring-rgb-dark: 191, 54, 12;
+}
+
+/* Tema Gelang: Zohor Jumaat (Hijau Emerald) */
+body[data-next-prayer="Dhuhr-Jumaat"] {
+  --ring-rgb: 16, 185, 129;
+  --ring-rgb-dark: 4, 120, 87;
+}
+
+/* =====================
+   Tema Malam (Dark Mode) - Menunggu Isyak hingga Subuh
+===================== */
+body[data-next-prayer="Isha"],
+body[data-next-prayer="Imsak"],
+body[data-next-prayer="Fajr"] {
+  background: radial-gradient(circle at top left, rgba(30, 58, 138, 0.05), transparent 28%),
+    linear-gradient(180deg, #010206 0%, #030712 100%);
+}
+
+body[data-next-prayer="Isha"]::before,
+body[data-next-prayer="Imsak"]::before,
+body[data-next-prayer="Fajr"]::before,
+body[data-next-prayer="Isha"]::after,
+body[data-next-prayer="Imsak"]::after,
+body[data-next-prayer="Fajr"]::after {
+  filter: brightness(0.2);
+}
+
+body[data-next-prayer="Isha"] .hero-floating-ambient,
+body[data-next-prayer="Imsak"] .hero-floating-ambient,
+body[data-next-prayer="Fajr"] .hero-floating-ambient {
+  filter: blur(14px) brightness(0.15);
 }
 
 body {
@@ -41,6 +102,7 @@ body {
     linear-gradient(180deg, #020617 0%, #0b1220 100%);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background 1.5s ease;
 }
 
 body::before {
@@ -52,6 +114,8 @@ body::before {
   pointer-events: none;
   z-index: -1;
   animation: ambientGlow 14s ease-in-out infinite;
+  will-change: transform, opacity;
+  transition: filter 1.5s ease;
 }
 
 .hero-floating-ambient{
@@ -64,6 +128,7 @@ body::before {
     radial-gradient(circle at 85% 75%, rgba(56,189,248,0.10), transparent 35%);
   filter: blur(14px);
   opacity:0.65;
+  transition: filter 1.5s ease;
 }
 
 body::after {
@@ -79,6 +144,8 @@ body::after {
   opacity: 0.85;
   z-index: -1;
   animation: drift 32s linear infinite;
+  will-change: transform;
+  transition: filter 1.5s ease;
 }
 
 .page-shell {
@@ -156,6 +223,7 @@ body::after {
 
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
   transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  will-change: transform, box-shadow;
 }
 
 .card:hover {
@@ -171,7 +239,7 @@ body::after {
   min-height: 420px;
   padding: 28px;
   animation: softPulse 10s ease-in-out infinite;
-  border: 1px solid rgba(212, 160, 23, 0.10);
+  border: 1px solid rgba(var(--ring-rgb), 0.10);
 }
 
 .hero-header {
@@ -219,7 +287,7 @@ body::after {
   font-weight: 950;
   letter-spacing: 0.01em;
   color: var(--white);
-  text-shadow: 0 0 26px rgba(212, 160, 23, 0.18), 0 2px 0 rgba(0, 0, 0, 0.25);
+  text-shadow: 0 0 26px rgba(var(--ring-rgb), 0.18), 0 2px 0 rgba(0, 0, 0, 0.25);
 }
 
 .current-prayer-focus__time {
@@ -229,7 +297,7 @@ body::after {
   padding: 10px 16px;
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(212, 160, 23, 0.16);
+  border: 1px solid rgba(var(--ring-rgb), 0.16);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
@@ -245,25 +313,26 @@ body::after {
   aspect-ratio: 1 / 1;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(212, 160, 23, 0.35);
+  border: 1px solid rgba(var(--ring-rgb), 0.35);
   box-shadow: 0 18px 60px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.10);
   backdrop-filter: blur(14px);
   overflow: hidden;
   transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  will-change: transform, box-shadow;
 }
 
 .ring-card::after {
   content: "";
   position: absolute;
   inset: -1px;
-  background: linear-gradient(135deg, rgba(212, 160, 23, 0.85), rgba(139, 107, 21, 0.12));
+  background: linear-gradient(135deg, rgba(var(--ring-rgb), 0.85), rgba(var(--ring-rgb-dark), 0.12));
   opacity: 0.12;
   pointer-events: none;
 }
 
 .ring-card:hover {
   transform: translateY(-3px);
-  border-color: rgba(212, 160, 23, 0.55);
+  border-color: rgba(var(--ring-rgb), 0.55);
   box-shadow: 0 26px 80px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
@@ -287,15 +356,15 @@ body::after {
 }
 
 .ring-card[data-ring="jam"] .ring__fg {
-  stroke: rgba(212, 160, 23, 0.95);
+  stroke: rgba(var(--ring-rgb), 0.95);
 }
 
 .ring-card[data-ring="minit"] .ring__fg {
-  stroke: rgba(212, 160, 23, 0.80);
+  stroke: rgba(var(--ring-rgb), 0.80);
 }
 
 .ring-card[data-ring="saat"] .ring__fg {
-  stroke: rgba(139, 107, 21, 0.95);
+  stroke: rgba(var(--ring-rgb-dark), 0.95);
 }
 
 .ring-card__content {
@@ -311,7 +380,7 @@ body::after {
   font-size: clamp(1.5rem, 4.5vw, 2.6rem);
   font-weight: 950;
   color: var(--white);
-  text-shadow: 0 0 26px rgba(212, 160, 23, 0.18);
+  text-shadow: 0 0 26px rgba(var(--ring-rgb), 0.18);
   margin-top: 4px;
 }
 
@@ -353,7 +422,7 @@ body::after {
   50% {
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.12),
-      0 28px 90px rgba(212, 160, 23, 0.16);
+      0 28px 90px rgba(var(--ring-rgb), 0.16);
   }
 }
 
@@ -464,6 +533,9 @@ body::after {
 
 .schedule-row__name,
 .schedule-row span:first-child {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-size: 1rem;
   font-weight: 700;
   color: rgba(245, 245, 245, 0.86);
@@ -594,6 +666,123 @@ body::after {
   }
 }
 
+/* =====================
+   Gaya Khusus: Imsak (Ungu/Indigo)
+===================== */
+.schedule-row--imsak {
+  border-color: rgba(99, 102, 241, 0.15);
+  background: linear-gradient(180deg, rgba(99, 102, 241, 0.04), rgba(99, 102, 241, 0.01));
+}
+
+.schedule-row--imsak:hover {
+  border-color: rgba(99, 102, 241, 0.35);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 16px 45px rgba(99, 102, 241, 0.12);
+}
+
+.schedule-row--imsak .schedule-row__name,
+.schedule-row--imsak span:first-child {
+  color: rgba(129, 140, 248, 0.95);
+}
+
+/* =====================
+   Gaya Khusus: Zawal (Amaran / Merah)
+===================== */
+.schedule-row--zawal {
+  border-color: rgba(239, 68, 68, 0.15);
+  background: linear-gradient(180deg, rgba(239, 68, 68, 0.04), rgba(239, 68, 68, 0.01));
+}
+
+.schedule-row--zawal:hover {
+  border-color: rgba(239, 68, 68, 0.35);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 16px 45px rgba(239, 68, 68, 0.12);
+}
+
+.schedule-row--zawal .schedule-row__name,
+.schedule-row--zawal span:first-child {
+  color: rgba(239, 68, 68, 0.95);
+}
+
+
+/* =====================
+   Gaya Khusus: Syuruk (Sunrise)
+===================== */
+.schedule-row--syuruk {
+  border-color: rgba(245, 158, 11, 0.15);
+  background: linear-gradient(180deg, rgba(245, 158, 11, 0.04), rgba(245, 158, 11, 0.01));
+}
+
+.schedule-row--syuruk:hover {
+  border-color: rgba(245, 158, 11, 0.35);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 16px 45px rgba(245, 158, 11, 0.12);
+}
+
+.schedule-row--syuruk .schedule-row__name,
+.schedule-row--syuruk span:first-child {
+  color: rgba(245, 158, 11, 0.95);
+}
+
+.row-icon {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  opacity: 0.9;
+}
+
+.badge-jumaat {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #34d399; /* Emerald 400 */
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  padding: 2px 8px;
+  border-radius: 6px;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.1);
+}
+
+/* =====================
+   Gaya Khusus: Aktif Jumaat (Hijau Emerald Pulse)
+===================== */
+.schedule-row--jumaat.active {
+  border-color: rgba(16, 185, 129, 0.72);
+  background: linear-gradient(180deg, rgba(16, 185, 129, 0.22), rgba(16, 185, 129, 0.06));
+  box-shadow:
+    0 0 0 1px rgba(16, 185, 129, 0.35),
+    0 22px 70px rgba(16, 185, 129, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  animation: activeJumaatPulse 2s ease-in-out infinite;
+}
+
+.schedule-row--jumaat.active::after {
+  background:
+    linear-gradient(90deg, rgba(16, 185, 129, 0.95), rgba(4, 120, 87, 0.0) 70%),
+    radial-gradient(240px 80px at 10% 50%, rgba(16, 185, 129, 0.35), transparent 60%);
+}
+
+.schedule-row--jumaat.active::before {
+  background:
+    radial-gradient(700px 160px at 20% 0%, rgba(16, 185, 129, 0.20), transparent 55%),
+    linear-gradient(120deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0) 45%);
+}
+
+@keyframes activeJumaatPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.20), 0 18px 55px rgba(16, 185, 129, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.10);
+  }
+  50% {
+    box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.36), 0 28px 85px rgba(16, 185, 129, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  }
+}
+
 
 .current-prayer-list {
   display: flex;
@@ -720,3 +909,14 @@ body::after {
   }
 }
 
+/* =====================
+   Accessibility (a11y) & Performance
+===================== */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

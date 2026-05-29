@@ -1,8 +1,12 @@
 export const CONFIG = {
   apiUrl: 'https://api.waktusolat.app/v2/solat/SGR03',
-  prayerOrder: ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'],
+  prayerOrder: ['Imsak', 'Fajr', 'Syuruk', 'Dhuha', 'Zawal', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'],
   translation: {
+    Imsak: 'Imsak',
     Fajr: 'Subuh',
+    Syuruk: 'Syuruk',
+    Dhuha: 'Dhuha',
+    Zawal: 'Zawal',
     Dhuhr: 'Zohor',
     Asr: 'Asar',
     Maghrib: 'Maghrib',
@@ -27,7 +31,11 @@ export function normalizePrayerData(prayers, referenceDate) {
 
   return {
     prayerTimes: {
+      Imsak: formatPrayerTimestamp(currentRecord.fajr - 600), // -10 minit (600 saat)
       Fajr: formatPrayerTimestamp(currentRecord.fajr),
+      Syuruk: formatPrayerTimestamp(currentRecord.syuruk),
+      Dhuha: formatPrayerTimestamp(currentRecord.syuruk + 1800), // +30 minit (1800 saat)
+      Zawal: formatPrayerTimestamp(currentRecord.dhuhr - 600), // -10 minit (600 saat)
       Dhuhr: formatPrayerTimestamp(currentRecord.dhuhr),
       Asr: formatPrayerTimestamp(currentRecord.asr),
       Maghrib: formatPrayerTimestamp(currentRecord.maghrib),
@@ -52,7 +60,7 @@ function compareMalaysiaDate(timestamp, referenceDate) {
   return referenceParts === recordParts;
 }
 
-function getActiveHijri(currentRecord, nextRecord, referenceDate) {
+export function getActiveHijri(currentRecord, nextRecord, referenceDate) {
   const maghribTime = new Date(currentRecord.maghrib * 1000);
   const hijriString = referenceDate >= maghribTime ? nextRecord.hijri : currentRecord.hijri;
   return formatHijriDate(hijriString);
@@ -135,9 +143,9 @@ export function getNextPrayer(prayerTimes, now) {
     return nextEntry;
   }
 
-  const nextFajr = createPrayerDate(prayerTimes.Fajr, now);
-  nextFajr.setDate(nextFajr.getDate() + 1);
-  return { name: 'Fajr', date: nextFajr };
+  const nextImsak = createPrayerDate(prayerTimes.Imsak, now);
+  nextImsak.setDate(nextImsak.getDate() + 1);
+  return { name: 'Imsak', date: nextImsak };
 }
 
 export function getProgressPercent(prayerTimes, nextPrayerTime) {
