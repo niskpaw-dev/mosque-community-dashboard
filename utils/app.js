@@ -310,6 +310,12 @@ function startCountdown() {
 
     const now = new Date();
 
+    // Hard-refresh (Muat semula) pada pukul 3:00 pagi setiap hari untuk mencuci memori (RAM) Smart TV
+    if (now.getHours() === 3 && now.getMinutes() === 0 && now.getSeconds() === 0) {
+      console.log('Penyelenggaraan harian: Memuat semula sistem...');
+      window.location.reload(true);
+    }
+
     // Muat turun automatik data API setiap kali hari bertukar (tengah malam)
     if (state.lastFetchDay && now.getDate() !== state.lastFetchDay) {
       // Jika tiada internet/gagal, kiat hadkan percubaan semula kepada setiap 1 minit (60000ms) untuk elak spam API
@@ -344,6 +350,12 @@ function updateLastUpdated() {
 }
 
 window.addEventListener('DOMContentLoaded', init);
+
+// Auto-refresh secara paksa apabila TV kembali mendapat sambungan internet
+window.addEventListener('online', () => {
+  console.log('Internet kembali pulih. Memuat semula (refresh) sistem...');
+  window.location.reload();
+});
 
 window.addEventListener('error', (event) => {
   console.error('Unhandled error:', event.error || event.message);

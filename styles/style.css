@@ -1,4 +1,6 @@
-﻿/* Reset */
+﻿@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+/* Reset */
 * {
   margin: 0;
   padding: 0;
@@ -92,7 +94,9 @@ body[data-next-prayer="Fajr"] .hero-floating-ambient {
 }
 
 body {
-  min-height: 100vh;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden; /* Kunci skrin dari sebarang scroll (TV mode) */
   position: relative;
 
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
@@ -149,20 +153,24 @@ body::after {
 }
 
 .page-shell {
-  width: min(1180px, calc(100% - 32px));
-  margin: 0 auto;
-  padding: 18px 0 32px;
+  width: 100%;
+  height: 100%;
+  padding: 3vh 4vw 5vh; /* Ruang tambahan di bahagian bawah (5vh) */
+  display: flex;
+  flex-direction: column;
+  margin: 0;
 }
 
 /* =====================
    Top Date Section
 ===================== */
 .top-date {
+  flex-shrink: 0;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 6px 0 22px;
+  padding: 0 0 3vh;
   text-align: center;
   position: relative;
 }
@@ -190,7 +198,7 @@ body::after {
 }
 
 .top-date__value {
-  font-size: clamp(1.0rem, 2.2vw, 1.35rem);
+  font-size: clamp(1.4rem, 2.5vw, 2.2rem);
   font-weight: 900;
   letter-spacing: 0.02em;
   color: var(--white);
@@ -199,7 +207,7 @@ body::after {
 
 .top-date__subtitle {
   margin-top: 6px;
-  font-size: 0.82rem;
+  font-size: clamp(0.9rem, 1.2vw, 1.2rem);
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: rgba(245, 245, 245, 0.78);
@@ -210,8 +218,11 @@ body::after {
 ===================== */
 .dashboard {
   display: grid;
-  grid-template-columns: minmax(0, 2.4fr) minmax(260px, 1fr);
-  gap: 22px;
+  grid-template-columns: minmax(0, 2.5fr) minmax(440px, 1.2fr);
+  grid-template-rows: 1fr minmax(14vh, auto);
+  gap: 2vh 2.5vw; /* Kurangkan jurang menegak kepada 2vh */
+  flex: 1;
+  min-height: 0; /* Penting untuk mengelakkan Grid melimpah */
 }
 
 .card {
@@ -236,7 +247,6 @@ body::after {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 420px;
   padding: 28px;
   animation: softPulse 10s ease-in-out infinite;
   border: 1px solid rgba(var(--ring-rgb), 0.10);
@@ -283,7 +293,7 @@ body::after {
 
 .current-prayer-focus__name {
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  font-size: clamp(2.2rem, 6vw, 4.2rem);
+  font-size: clamp(3rem, 6vw, 6rem);
   font-weight: 950;
   letter-spacing: 0.01em;
   color: var(--white);
@@ -291,7 +301,7 @@ body::after {
 }
 
 .current-prayer-focus__time {
-  font-size: clamp(1.4rem, 4vw, 2.5rem);
+  font-size: clamp(2rem, 4vw, 3.5rem);
   font-weight: 850;
   color: rgba(245, 245, 245, 0.95);
   padding: 10px 16px;
@@ -312,6 +322,9 @@ body::after {
   position: relative;
   aspect-ratio: 1 / 1;
   border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(var(--ring-rgb), 0.35);
   box-shadow: 0 18px 60px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.10);
@@ -377,8 +390,9 @@ body::after {
 }
 
 .ring-card__value {
-  font-size: clamp(1.5rem, 4.5vw, 2.6rem);
-  font-weight: 950;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(2rem, 4.5vw, 4.2rem);
+  font-weight: 400;
   color: var(--white);
   text-shadow: 0 0 26px rgba(var(--ring-rgb), 0.18);
   margin-top: 4px;
@@ -437,6 +451,9 @@ body::after {
    Jadual Solat premium smart-display
 ===================== */
 .schedule-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   position: relative;
   overflow: hidden;
   isolation: isolate;
@@ -486,7 +503,7 @@ body::after {
 
 .schedule-title {
   font-weight: 950;
-  font-size: clamp(30px, 3.2vw, 34px);
+  font-size: clamp(34px, 3.2vw, 48px);
   line-height: 1.1;
   letter-spacing: -0.5px;
   color: var(--white);
@@ -522,8 +539,10 @@ body::after {
 .schedule-body {
   position: relative;
   z-index: 1;
-  display: grid;
-  gap: 13px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-evenly;
 }
 
 .schedule-row {
@@ -546,8 +565,8 @@ body::after {
 .schedule-row span:last-child {
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum";
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  font-size: 1rem;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1.15rem;
   color: rgba(245, 245, 245, 0.98);
   letter-spacing: 0.06em;
 }
@@ -560,7 +579,7 @@ body::after {
   align-items: center;
   gap: 12px;
 
-  padding: 16px 18px;
+  padding: 1.5vh 20px;
   border-radius: 24px;
   border: 1px solid rgba(148, 163, 184, 0.10);
   background:
@@ -599,8 +618,8 @@ body::after {
 .schedule-row span:last-child {
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum";
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  font-size: 1rem;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1.15rem;
   color: rgba(245, 245, 245, 0.98);
   letter-spacing: 0.06em;
   text-shadow: 0 0 18px rgba(212, 160, 23, 0.10);
@@ -809,12 +828,21 @@ body::after {
 }
 
 .side-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: clamp(1.1rem, 1.5vw, 1.6rem);
   box-shadow: 0 14px 38px rgba(0, 0, 0, 0.14);
 }
 
 .side-card p {
   color: #cbd5e1;
   line-height: 1.8;
+}
+
+.card-header h2 {
+  font-size: clamp(1.5rem, 2vw, 2.2rem);
+  margin-bottom: 1vh;
 }
 
 /* =====================
