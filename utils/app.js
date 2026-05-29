@@ -1,13 +1,13 @@
-﻿﻿import { CONFIG, getCurrentPrayer, getNextPrayer, getActiveHijri } from './prayer-utils.js';
+﻿﻿// Import Anime.js melalui CDN (Sesuai untuk Vanilla JS tanpa Node.js bundler)
+import anime from 'https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.es.js';
+
+import { CONFIG, getCurrentPrayer, getNextPrayer, getActiveHijri } from './prayer-utils.js';
 
 import { fetchPrayerTimes } from '../services/prayer-service.js';
 import { fetchWeather } from '../services/weather-service.js';
 import { getCurrentTime, getHijriDate } from '../services/time-service.js';
-import { getMasjidStatus, getDynamicAnnouncement } from '../services/status-service.js';
 import { renderHeader } from '../components/Header.js';
 import { renderScheduleGrid } from '../components/PrayerCard.js';
-import { renderAnnouncementCard } from '../components/AnnouncementCard.js';
-import { renderStatusCard } from '../components/StatusCard.js';
 
 const state = {
   prayerTimes: null,
@@ -18,7 +18,6 @@ const state = {
   nextPrayerName: null,
   nextPrayerTime: null,
   weather: null,
-  masjidStatus: 'Sedang memuat...',
   lastFetchDay: null,
   lastFetchAttemptTime: 0,
 };
@@ -27,8 +26,7 @@ const topInfo = {
   // Legacy chips (new UI may not include these ids)
   currentTime: document.getElementById('currentTime'),
   hijriDate: document.getElementById('hijriDate'),
-  weatherStatus: document.getElementById('weatherStatus'),
-  masjidStatus: document.getElementById('masjidStatus')
+  weatherStatus: document.getElementById('weatherStatus')
 };
 
 const topDateEls = {
@@ -49,6 +47,20 @@ const ringEls = {
   saat: document.getElementById('timerSaat'),
   cards: Array.from(document.querySelectorAll('.ring-card'))
 };
+
+// Konfigurasi Slideshow (Iklan/Poster)
+// Nota: Gantikan URL di bawah dengan 'assets/iklan1.jpg' dan sebagainya nanti
+const POSTERS = [
+  'https://images.unsplash.com/photo-1564683214964-b31c990f1bc2?auto=format&fit=crop&w=1920&q=80',
+  'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=1920&q=80',
+  'https://images.unsplash.com/photo-1590076214995-17bd36856cb9?auto=format&fit=crop&w=1920&q=80'
+];
+let currentPosterIndex = 0;
+let isPosterMode = false;
+let modeTimer = 0; // saat
+const DISPLAY_DASHBOARD_SEC = 60; // Masa tayangan jadual (1 minit)
+const DISPLAY_SLIDESHOW_SEC = 45; // Masa tayangan iklan (45 saat total)
+const SLIDE_DURATION_SEC = 15;    // Masa setiap 1 gambar (15 saat)
 
 // Objek Audio untuk bunyi notifikasi (chime)
 // Nota: Sila pastikan anda meletakkan fail audio (contoh: chime.mp3) di dalam folder yang betul.
@@ -105,10 +117,6 @@ function updateTopInfo() {
     topInfo.weatherStatus.textContent = state.weather
       ? `${state.weather.icon} ${state.weather.label} ${state.weather.temperature}°C`
       : 'Memuat cuaca...';
-  }
-
-  if (topInfo.masjidStatus) {
-    topInfo.masjidStatus.textContent = state.masjidStatus;
   }
 }
 
@@ -192,8 +200,6 @@ function updatePrayerZonesAndCountdown() {
 async function init() {
   console.log('Waktu Solat app start');
   renderHeader();
-  renderAnnouncementCard('Memuat data solat...');
-  renderStatusCard(state.masjidStatus);
 
   updateTopInfo();
 
@@ -219,7 +225,6 @@ async function loadPrayerTimes() {
     updateDashboard();
   } catch (error) {
     console.error('Prayer load failed:', error);
-    renderStatusCard('Data tidak tersedia');
 
 
     if (document.getElementById('nextPrayer')) {
@@ -283,10 +288,6 @@ function calculatePrayerState() {
   state.currentPrayerName = currentPrayer.name;
   state.nextPrayerName = nextPrayer.name;
   state.nextPrayerTime = nextPrayer.date;
-  state.masjidStatus = getMasjidStatus(currentPrayer.name, now);
-
-  renderAnnouncementCard(getDynamicAnnouncement(currentPrayer.name, nextPrayer.name));
-  renderStatusCard(state.masjidStatus);
 }
 
 function updateDashboard() {
@@ -300,7 +301,6 @@ function updateDashboard() {
     renderScheduleGrid(state.prayerTimes, now, currentPrayer.name);
   }
 
-  renderStatusCard(state.masjidStatus);
   updateLastUpdated();
 }
 
@@ -309,6 +309,64 @@ function startCountdown() {
     updateTopInfo();
 
     const now = new Date();
+
+    // --- LOGIK SLIDESHOW IKLAN ---
+    const posterContainer = document.getElementById('posterSlideshow');
+    const posterImage = document.getElementById('posterImage');
+    const posterCountdown = document.getElementById('posterCountdown');
+
+    if (posterContainer && posterImage && POSTERS.length > 0) {
+      let secondsToNextPrayer = 9999;
+      if (state.nextPrayerTime) {
+        secondsToNextPrayer = (state.nextPrayerTime - now) / 1000;
+      }
+
+      // Jangan tayang iklan jika masa < 5 minit (300 saat) ke azan
+      if (secondsToNextPrayer <= 300) {
+        if (isPosterMode) {
+          isPosterMode = false;
+          modeTimer = 0;
+          posterContainer.classList.add('hidden');
+        }
+      } else {
+        modeTimer++;
+        if (!isPosterMode) {
+          // Mod Jadual
+          if (modeTimer >= DISPLAY_DASHBOARD_SEC) {
+            isPosterMode = true;
+            modeTimer = 0;
+            posterImage.src = POSTERS[currentPosterIndex];
+            posterContainer.classList.remove('hidden');
+          }
+        } else {
+          // Mod Iklan / Slideshow
+          const timeLeft = DISPLAY_SLIDESHOW_SEC - modeTimer;
+          if (posterCountdown) posterCountdown.textContent = timeLeft;
+
+          if (modeTimer >= DISPLAY_SLIDESHOW_SEC) {
+            // Tamat sesi iklan, kembali ke jadual
+            isPosterMode = false;
+            modeTimer = 0;
+            posterContainer.classList.add('hidden');
+            currentPosterIndex = (currentPosterIndex + 1) % POSTERS.length;
+          } else if (modeTimer % SLIDE_DURATION_SEC === 0) {
+            // Tukar ke slide seterusnya
+            currentPosterIndex = (currentPosterIndex + 1) % POSTERS.length;
+            
+            // Animasi pertukaran gambar menggunakan Anime.js (Fade In + Zoom Out)
+            anime({
+              targets: posterImage,
+              opacity: [0, 1],
+              scale: [1.05, 1],
+              duration: 1200,
+              easing: 'easeOutQuart',
+              begin: () => { posterImage.src = POSTERS[currentPosterIndex]; }
+            });
+          }
+        }
+      }
+    }
+    // --- TAMAT LOGIK SLIDESHOW ---
 
     // Hard-refresh (Muat semula) pada pukul 3:00 pagi setiap hari untuk mencuci memori (RAM) Smart TV
     if (now.getHours() === 3 && now.getMinutes() === 0 && now.getSeconds() === 0) {

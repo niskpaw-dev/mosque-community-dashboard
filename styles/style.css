@@ -219,8 +219,7 @@ body::after {
 .dashboard {
   display: grid;
   grid-template-columns: minmax(0, 2.5fr) minmax(440px, 1.2fr);
-  grid-template-rows: 1fr minmax(14vh, auto);
-  gap: 2vh 2.5vw; /* Kurangkan jurang menegak kepada 2vh */
+  gap: 2.5vw;
   flex: 1;
   min-height: 0; /* Penting untuk mengelakkan Grid melimpah */
 }
@@ -271,7 +270,7 @@ body::after {
 
 .hero-body {
   display: grid;
-  gap: 16px;
+  gap: 1.5vh;
 }
 
 .hero-label {
@@ -314,8 +313,11 @@ body::after {
 .countdown-ring-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
+  gap: 1.5vw;
   align-items: center;
+  max-width: 65vh; /* Hadkan saiz maksimum gelang mengikut tinggi TV */
+  margin: 0 auto; /* Pusatkan (center) gelang */
+  width: 100%;
 }
 
 .ring-card {
@@ -391,7 +393,7 @@ body::after {
 
 .ring-card__value {
   font-family: 'Share Tech Mono', monospace;
-  font-size: clamp(2rem, 4.5vw, 4.2rem);
+  font-size: clamp(1.8rem, 4vh, 4rem);
   font-weight: 400;
   color: var(--white);
   text-shadow: 0 0 26px rgba(var(--ring-rgb), 0.18);
@@ -555,7 +557,7 @@ body::after {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 1rem;
+  font-size: clamp(1.2rem, 2.2vh, 1.6rem);
   font-weight: 700;
   color: rgba(245, 245, 245, 0.86);
   letter-spacing: 0.02em;
@@ -566,7 +568,7 @@ body::after {
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum";
   font-family: 'Share Tech Mono', monospace;
-  font-size: 1.15rem;
+  font-size: clamp(1.4rem, 2.6vh, 2rem);
   color: rgba(245, 245, 245, 0.98);
   letter-spacing: 0.06em;
 }
@@ -609,7 +611,7 @@ body::after {
 }
 
 .schedule-row span:first-child {
-  font-size: 1rem;
+  font-size: clamp(1.2rem, 2.2vh, 1.6rem);
   font-weight: 650;
   color: rgba(245, 245, 245, 0.86);
   letter-spacing: 0.02em;
@@ -619,7 +621,7 @@ body::after {
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum";
   font-family: 'Share Tech Mono', monospace;
-  font-size: 1.15rem;
+  font-size: clamp(1.4rem, 2.6vh, 2rem);
   color: rgba(245, 245, 245, 0.98);
   letter-spacing: 0.06em;
   text-shadow: 0 0 18px rgba(212, 160, 23, 0.10);
@@ -747,8 +749,8 @@ body::after {
 }
 
 .row-icon {
-  width: 18px;
-  height: 18px;
+  width: clamp(20px, 3vh, 28px);
+  height: clamp(20px, 3vh, 28px);
   stroke: currentColor;
   opacity: 0.9;
 }
@@ -756,7 +758,7 @@ body::after {
 .badge-jumaat {
   display: inline-flex;
   align-items: center;
-  font-size: 0.65rem;
+  font-size: clamp(0.75rem, 1.2vh, 0.9rem);
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -827,22 +829,45 @@ body::after {
   animation: highlightPulse 1.1s ease;
 }
 
-.side-card {
+/* =====================
+   Poster / Slideshow (Iklan)
+===================== */
+.poster-slideshow {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: #000;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
   display: flex;
-  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  font-size: clamp(1.1rem, 1.5vw, 1.6rem);
-  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.14);
 }
 
-.side-card p {
-  color: #cbd5e1;
-  line-height: 1.8;
+.poster-slideshow.hidden {
+  opacity: 0;
+  visibility: hidden;
 }
 
-.card-header h2 {
-  font-size: clamp(1.5rem, 2vw, 2.2rem);
-  margin-bottom: 1vh;
+.poster-slideshow img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.poster-slideshow__overlay {
+  position: absolute;
+  bottom: 4vh;
+  right: 3vw;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(12px);
+  padding: 12px 24px;
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: clamp(1.2rem, 1.8vw, 1.8rem);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 /* =====================
