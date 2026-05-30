@@ -95,8 +95,11 @@ body[data-next-prayer="Fajr"] .hero-floating-ambient {
 
 body {
   height: 100vh;
+  min-height: 100vh;
   width: 100vw;
   overflow: hidden; /* Kunci skrin dari sebarang scroll (TV mode) */
+  overflow-x: hidden;
+  overflow-y: auto; /* Buka fungsi scroll untuk PC / Desktop */
   position: relative;
 
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
@@ -154,8 +157,8 @@ body::after {
 
 .page-shell {
   width: 100%;
-  height: 100%;
-  padding: 3vh 4vw 5vh; /* Ruang tambahan di bahagian bawah (5vh) */
+  min-height: 100vh;
+  padding: clamp(24px, 4vh, 40px) clamp(24px, 4vw, 60px); /* Skala responsif PC/Desktop */
   display: flex;
   flex-direction: column;
   margin: 0;
@@ -313,9 +316,9 @@ body::after {
 .countdown-ring-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.5vw;
+  gap: clamp(16px, 1.5vw, 30px);
   align-items: center;
-  max-width: 65vh; /* Hadkan saiz maksimum gelang mengikut tinggi TV */
+  max-width: clamp(320px, 45vw, 550px); /* Responsif untuk desktop, bukan TV semata-mata */
   margin: 0 auto; /* Pusatkan (center) gelang */
   width: 100%;
 }
@@ -393,7 +396,7 @@ body::after {
 
 .ring-card__value {
   font-family: 'Share Tech Mono', monospace;
-  font-size: clamp(1.8rem, 4vh, 4rem);
+  font-size: clamp(1.5rem, 3.5vw, 3.5rem);
   font-weight: 400;
   color: var(--white);
   text-shadow: 0 0 26px rgba(var(--ring-rgb), 0.18);
@@ -581,7 +584,7 @@ body::after {
   align-items: center;
   gap: 12px;
 
-  padding: 1.5vh 20px;
+  padding: clamp(12px, 1.5vw, 20px) 20px;
   border-radius: 24px;
   border: 1px solid rgba(148, 163, 184, 0.10);
   background:
@@ -611,7 +614,7 @@ body::after {
 }
 
 .schedule-row span:first-child {
-  font-size: clamp(1.2rem, 2.2vh, 1.6rem);
+  font-size: clamp(1rem, 1.4vw, 1.5rem);
   font-weight: 650;
   color: rgba(245, 245, 245, 0.86);
   letter-spacing: 0.02em;
@@ -621,7 +624,7 @@ body::after {
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum";
   font-family: 'Share Tech Mono', monospace;
-  font-size: clamp(1.4rem, 2.6vh, 2rem);
+  font-size: clamp(1.2rem, 1.8vw, 1.8rem);
   color: rgba(245, 245, 245, 0.98);
   letter-spacing: 0.06em;
   text-shadow: 0 0 18px rgba(212, 160, 23, 0.10);
