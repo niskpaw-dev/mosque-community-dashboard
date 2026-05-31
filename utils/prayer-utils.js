@@ -1,12 +1,11 @@
 export const CONFIG = {
   apiUrl: 'https://api.waktusolat.app/v2/solat/SGR03',
-  prayerOrder: ['Imsak', 'Fajr', 'Syuruk', 'Dhuha', 'Zawal', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'],
+  prayerOrder: ['Imsak', 'Fajr', 'Syuruk', 'Dhuha', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'],
   translation: {
     Imsak: 'Imsak',
     Fajr: 'Subuh',
     Syuruk: 'Syuruk',
     Dhuha: 'Dhuha',
-    Zawal: 'Zawal',
     Dhuhr: 'Zohor',
     Asr: 'Asar',
     Maghrib: 'Maghrib',

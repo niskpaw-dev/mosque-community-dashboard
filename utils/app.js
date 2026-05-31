@@ -15,8 +15,10 @@ const state = {
   currentRecord: null,
   nextRecord: null,
   currentPrayerName: null,
+  currentPrayerTime: null,
   nextPrayerName: null,
   nextPrayerTime: null,
+  isIqamah: false,
   weather: null,
   lastFetchDay: null,
   lastFetchAttemptTime: 0,
@@ -37,6 +39,7 @@ const focusEls = {
   activeBadge: document.getElementById('activePrayerBadge'),
   nextName: document.getElementById('nextPrayerFocus'),
   nextTime: document.getElementById('nextPrayerTimeFocus'),
+  nextLabel: document.querySelector('.hero-next__label'),
   currentPrayerList: document.getElementById('currentPrayerList'),
 };
 
@@ -51,16 +54,16 @@ const ringEls = {
 // Konfigurasi Slideshow (Iklan/Poster)
 // Nota: Gantikan URL di bawah dengan 'assets/iklan1.jpg' dan sebagainya nanti
 const POSTERS = [
-  'https://images.unsplash.com/photo-1564683214964-b31c990f1bc2?auto=format&fit=crop&w=1920&q=80',
-  'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=1920&q=80',
-  'https://images.unsplash.com/photo-1590076214995-17bd36856cb9?auto=format&fit=crop&w=1920&q=80'
+  { type: 'image', url: 'https://images.unsplash.com/photo-1564683214964-b31c990f1bc2?auto=format&fit=crop&w=1920&q=80' },
+  { type: 'image', url: 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=1920&q=80' },
+  { type: 'image', url: 'https://images.unsplash.com/photo-1590076214995-17bd36856cb9?auto=format&fit=crop&w=1920&q=80' }
 ];
 let currentPosterIndex = 0;
 let isPosterMode = false;
 let modeTimer = 0; // saat
-const DISPLAY_DASHBOARD_SEC = 60; // Masa tayangan jadual (1 minit)
-const DISPLAY_SLIDESHOW_SEC = 45; // Masa tayangan iklan (45 saat total)
-const SLIDE_DURATION_SEC = 15;    // Masa setiap 1 gambar (15 saat)
+let slidesShown = 0; // Jejaki berapa banyak media (gambar/video) telah ditayang
+const DISPLAY_DASHBOARD_SEC = 15; // Masa tayangan jadual (15 saat)
+const SLIDE_DURATION_SEC = 15;    // Masa setiap 1 gambar iklan (15 saat)
 
 // Objek Audio untuk bunyi notifikasi (chime)
 // Nota: Sila pastikan anda meletakkan fail audio (contoh: chime.mp3) di dalam folder yang betul.
@@ -118,6 +121,35 @@ function updateTopInfo() {
       ? `${state.weather.icon} ${state.weather.label} ${state.weather.temperature}°C`
       : 'Memuat cuaca...';
   }
+
+  // --- LOGIK FLIP CLOCK WAKTU SEMASA ---
+  let hh = now.getHours();
+  let mm = now.getMinutes();
+  let ss = now.getSeconds();
+  const ampm = hh >= 12 ? 'PM' : 'AM';
+
+  hh = String(hh % 12 || 12).padStart(2, '0');
+  mm = String(mm).padStart(2, '0');
+  ss = String(ss).padStart(2, '0');
+
+  const elH = document.getElementById('flipHour');
+  const elM = document.getElementById('flipMinute');
+  const elS = document.getElementById('flipSecond');
+  const elAmpm = document.getElementById('flipAmpm');
+
+  const updateFlipCard = (el, val) => {
+    if (el && el.textContent !== val) {
+      el.textContent = val;
+      el.classList.remove('flip-animate');
+      void el.offsetWidth; // Trigger browser reflow paksa animasi diulang
+      el.classList.add('flip-animate');
+    }
+  };
+
+  updateFlipCard(elH, hh);
+  updateFlipCard(elM, mm);
+  updateFlipCard(elS, ss);
+  updateFlipCard(elAmpm, ampm);
 }
 
 function secondsToHMS(seconds) {
@@ -147,10 +179,32 @@ function updatePrayerZonesAndCountdown() {
   const currentPrayer = getCurrentPrayer(state.prayerTimes, now);
   const nextPrayer = getNextPrayer(state.prayerTimes, now);
 
-  // Kemas kini atribut tema supaya UI (gelang) bertukar warna mengikut waktu seterusnya
+  // --- LOGIK IQAMAH (10 MINIT) ---
+  const isFriday = now.getDay() === 5;
+  const fardhuPrayers = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+  const isFardhu = fardhuPrayers.includes(currentPrayer.name);
+  const skipIqamah = currentPrayer.name === 'Dhuhr' && isFriday; // Solat Jumaat (tiada hitung mundur Iqamah)
+
+  let targetTime = state.nextPrayerTime;
+  state.isIqamah = false;
+
+  if (isFardhu && !skipIqamah && state.currentPrayerTime) {
+    const iqamahTime = new Date(state.currentPrayerTime.getTime() + 10 * 60 * 1000); // 10 minit
+    if (now < iqamahTime) {
+      state.isIqamah = true;
+      targetTime = iqamahTime;
+    }
+  }
+
+  // Kemas kini atribut tema supaya UI (gelang) bertukar warna mengikut waktu
   let themeName = nextPrayer.name;
-  if (themeName === 'Dhuhr' && now.getDay() === 5) {
+  if (themeName === 'Dhuhr' && isFriday) {
     themeName = 'Dhuhr-Jumaat';
+  }
+
+  if (state.isIqamah) {
+    // Semasa Iqamah, kekalkan tema warna waktu solat sekarang
+    themeName = currentPrayer.name;
   }
   document.body.setAttribute('data-next-prayer', themeName);
 
@@ -161,22 +215,19 @@ function updatePrayerZonesAndCountdown() {
     focusEls.activeBadge.classList.add('active-prayer-pulse');
   }
 
-  // 2) NEXT UPCOMING PRAYER
-  if (focusEls.nextName) {
-    focusEls.nextName.textContent = CONFIG.translation[nextPrayer.name] || nextPrayer.name || '—';
+  // 2) NEXT UPCOMING PRAYER / IQAMAH
+  if (state.isIqamah) {
+    if (focusEls.nextLabel) focusEls.nextLabel.textContent = 'IQAMAH BERMULA DALAM';
+    if (focusEls.nextName) focusEls.nextName.textContent = 'Menunggu Solat';
+    if (focusEls.nextTime) focusEls.nextTime.textContent = targetTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+  } else {
+    if (focusEls.nextLabel) focusEls.nextLabel.textContent = 'WAKTU SOLAT SETERUSNYA';
+    if (focusEls.nextName) focusEls.nextName.textContent = CONFIG.translation[nextPrayer.name] || nextPrayer.name || '—';
+    if (focusEls.nextTime) focusEls.nextTime.textContent = nextPrayer.date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
   }
 
-  if (focusEls.nextTime) {
-    focusEls.nextTime.textContent = nextPrayer.date.toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true
-    });
-  }
-
-  // 3) COUNTDOWN TO NEXT PRAYER (always target nextPrayerTime)
-  // Guard: when API uses exact minute boundaries, nextPrayerTime can equal 'now' very briefly.
-  const secondsLeft = Math.max(0, (state.nextPrayerTime - now) / 1000);
+  // 3) COUNTDOWN TO TARGET TIME
+  const secondsLeft = Math.max(0, (targetTime - now) / 1000);
   const { hours, minutes, seconds } = secondsToHMS(secondsLeft);
 
   if (ringEls.jam) ringEls.jam.textContent = String(hours).padStart(2, '0');
@@ -196,12 +247,67 @@ function updatePrayerZonesAndCountdown() {
   }
 }
 
+function setupIklanUploader() {
+  // 1. Cipta Butang Muat Naik dari UI
+  const uploaderBtn = document.createElement('label');
+  uploaderBtn.className = 'upload-iklan-btn';
+  uploaderBtn.innerHTML = '📷 Muat Naik Iklan / Video <input type="file" accept="image/*,video/mp4,video/webm" multiple style="display:none;">';
+  
+  // 2. Gantikan array POSTERS apabila fail dipilih
+  uploaderBtn.querySelector('input').addEventListener('change', (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length > 0) {
+      POSTERS.length = 0; // Buang fail media hardcode yang sedia ada
+      files.forEach(file => {
+        const isVideo = file.type.startsWith('video/');
+        POSTERS.push({ type: isVideo ? 'video' : 'image', url: URL.createObjectURL(file) }); // Bina URL unik untuk media
+      });
+      currentPosterIndex = 0;
+      alert(`${files.length} fail media berjaya dimuat naik dan akan dimainkan pada putaran seterusnya!`);
+    }
+  });
+  
+  const scheduleCard = document.querySelector('.schedule-card');
+  if (scheduleCard) {
+    scheduleCard.appendChild(uploaderBtn);
+  } else {
+    document.body.appendChild(uploaderBtn);
+  }
+
+  // --- LOGIK AUTO-SEMBUNYI BUTANG ---
+  let hideBtnTimeout;
+  const resetBtnTimeout = () => {
+    // Munculkan butang
+    uploaderBtn.style.opacity = '1';
+    uploaderBtn.style.pointerEvents = 'auto';
+    
+    clearTimeout(hideBtnTimeout);
+    // Sembunyikan selepas 60,000ms (1 minit)
+    hideBtnTimeout = setTimeout(() => {
+      uploaderBtn.style.opacity = '0';
+      uploaderBtn.style.pointerEvents = 'none';
+    }, 60000); 
+  };
+
+  // Kesan pergerakan tetikus atau sentuhan untuk munculkan butang semula
+  window.addEventListener('mousemove', resetBtnTimeout);
+  window.addEventListener('touchstart', resetBtnTimeout);
+  resetBtnTimeout(); // Mulakan kiraan 1 minit pertama
+
+  // 3. Pindahkan Slideshow Kontena ke dalam Hero Card (Kad Kiri)
+  const posterContainer = document.getElementById('posterSlideshow');
+  const heroCard = document.querySelector('.hero-card');
+  if (posterContainer && heroCard) {
+    heroCard.appendChild(posterContainer);
+  }
+}
 
 async function init() {
   console.log('Waktu Solat app start');
   renderHeader();
 
   updateTopInfo();
+  setupIklanUploader();
 
   loadWeather();
   await loadPrayerTimes();
@@ -286,6 +392,7 @@ function calculatePrayerState() {
   }
 
   state.currentPrayerName = currentPrayer.name;
+  state.currentPrayerTime = currentPrayer.date;
   state.nextPrayerName = nextPrayer.name;
   state.nextPrayerTime = nextPrayer.date;
 }
@@ -313,6 +420,7 @@ function startCountdown() {
     // --- LOGIK SLIDESHOW IKLAN ---
     const posterContainer = document.getElementById('posterSlideshow');
     const posterImage = document.getElementById('posterImage');
+    const posterVideo = document.getElementById('posterVideo');
     const posterCountdown = document.getElementById('posterCountdown');
 
     if (posterContainer && posterImage && POSTERS.length > 0) {
@@ -321,12 +429,14 @@ function startCountdown() {
         secondsToNextPrayer = (state.nextPrayerTime - now) / 1000;
       }
 
-      // Jangan tayang iklan jika masa < 5 minit (300 saat) ke azan
-      if (secondsToNextPrayer <= 300) {
+      // Jangan tayang iklan jika masa < 10 minit (600 saat) ke azan ATAU sedang menunggu Iqamah
+      if (secondsToNextPrayer <= 600 || state.isIqamah) {
         if (isPosterMode) {
           isPosterMode = false;
           modeTimer = 0;
+          slidesShown = 0;
           posterContainer.classList.add('hidden');
+          if (posterVideo) posterVideo.pause();
         }
       } else {
         modeTimer++;
@@ -335,33 +445,93 @@ function startCountdown() {
           if (modeTimer >= DISPLAY_DASHBOARD_SEC) {
             isPosterMode = true;
             modeTimer = 0;
-            posterImage.src = POSTERS[currentPosterIndex];
+            slidesShown = 1;
             posterContainer.classList.remove('hidden');
+
+            const media = POSTERS[currentPosterIndex];
+            posterVideo.loop = false; // Matikan loop agar video boleh tamat (ended)
+            if (media.type === 'video') {
+              posterImage.style.display = 'none';
+              posterVideo.style.display = 'block';
+              posterVideo.src = media.url;
+              posterVideo.play().catch(e => console.warn('Gagal putar video', e));
+            } else {
+              posterVideo.style.display = 'none';
+              posterVideo.pause();
+              posterImage.style.display = 'block';
+              posterImage.src = media.url;
+            }
           }
         } else {
           // Mod Iklan / Slideshow
-          const timeLeft = DISPLAY_SLIDESHOW_SEC - modeTimer;
-          if (posterCountdown) posterCountdown.textContent = timeLeft;
+          const media = POSTERS[currentPosterIndex];
+          let slideIsDone = false;
+          let remaining = 0;
 
-          if (modeTimer >= DISPLAY_SLIDESHOW_SEC) {
-            // Tamat sesi iklan, kembali ke jadual
-            isPosterMode = false;
-            modeTimer = 0;
-            posterContainer.classList.add('hidden');
-            currentPosterIndex = (currentPosterIndex + 1) % POSTERS.length;
-          } else if (modeTimer % SLIDE_DURATION_SEC === 0) {
-            // Tukar ke slide seterusnya
-            currentPosterIndex = (currentPosterIndex + 1) % POSTERS.length;
+          if (media.type === 'video') {
+            const duration = isNaN(posterVideo.duration) ? 0 : posterVideo.duration;
+            const currentTime = posterVideo.currentTime || 0;
+            remaining = Math.max(0, Math.ceil(duration - currentTime));
             
-            // Animasi pertukaran gambar menggunakan Anime.js (Fade In + Zoom Out)
-            anime({
-              targets: posterImage,
-              opacity: [0, 1],
-              scale: [1.05, 1],
-              duration: 1200,
-              easing: 'easeOutQuart',
-              begin: () => { posterImage.src = POSTERS[currentPosterIndex]; }
-            });
+            // Video akan bermain sehingga habis (ended)
+            if (posterVideo.ended) {
+              slideIsDone = true;
+            } else if (modeTimer > 3 && (posterVideo.paused || duration === 0)) {
+              // Fallback keselamatan: Skip jika video rosak / gagal dimainkan selepas 3 saat
+              slideIsDone = true;
+            }
+          } else {
+            // Gambar kekal 15 saat
+            remaining = Math.max(0, SLIDE_DURATION_SEC - modeTimer);
+            if (modeTimer >= SLIDE_DURATION_SEC) {
+              slideIsDone = true;
+            }
+          }
+
+          if (posterCountdown) posterCountdown.textContent = remaining;
+
+          if (slideIsDone) {
+            if (slidesShown >= POSTERS.length) {
+              // Tamat kitaran kesemua iklan, kembali ke jadual
+              isPosterMode = false;
+              modeTimer = 0;
+              slidesShown = 0;
+              posterContainer.classList.add('hidden');
+              posterVideo.pause();
+              currentPosterIndex = (currentPosterIndex + 1) % POSTERS.length;
+            } else {
+              // Tukar ke media iklan seterusnya
+              currentPosterIndex = (currentPosterIndex + 1) % POSTERS.length;
+              slidesShown++;
+              modeTimer = 0;
+              
+              const nextMedia = POSTERS[currentPosterIndex];
+              let targetEl;
+
+              posterVideo.loop = false; // Matikan loop
+              if (nextMedia.type === 'video') {
+                posterImage.style.display = 'none';
+                posterVideo.style.display = 'block';
+                posterVideo.src = nextMedia.url;
+                posterVideo.play().catch(e => console.warn('Gagal putar video', e));
+                targetEl = posterVideo;
+              } else {
+                posterVideo.style.display = 'none';
+                posterVideo.pause();
+                posterImage.style.display = 'block';
+                posterImage.src = nextMedia.url;
+                targetEl = posterImage;
+              }
+
+              // Animasi pertukaran media (gambar/video) menggunakan Anime.js
+              anime({
+                targets: targetEl,
+                translateX: ['100%', '0%'], // Slaid masuk dari arah kanan
+                opacity: [0.5, 1],
+                duration: 1000,
+                easing: 'easeOutExpo'
+              });
+            }
           }
         }
       }

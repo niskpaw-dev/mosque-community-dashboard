@@ -11,16 +11,40 @@
     <div class="page-shell">
       <div class="hero-floating-ambient" aria-hidden="true"></div>
 
-      <header class="top-date">
-        <div class="top-date__glow" aria-hidden="true"></div>
-
-        <div class="top-date__text">
-          <div class="top-date__value" id="miladiHijriDate">Loading...</div>
-          <div class="top-date__subtitle">
-            Waktu Solat Daerah Kuala Langat &bull; <span id="weatherStatus">Memuat cuaca...</span>
+      <!-- Wrapper Grid Atas untuk elak Overlap -->
+      <div class="top-bar">
+        <!-- Flip Clock (Waktu Semasa) -->
+        <div class="top-left-clock">
+          <div class="flip-group">
+            <div class="flip-card" id="flipHour">--</div>
           </div>
+          <div class="flip-colon">:</div>
+          <div class="flip-group">
+            <div class="flip-card" id="flipMinute">--</div>
+          </div>
+          <div class="flip-colon">:</div>
+          <div class="flip-group">
+            <div class="flip-card" id="flipSecond">--</div>
+          </div>
+          <div class="flip-ampm" id="flipAmpm">--</div>
         </div>
-      </header>
+
+        <header class="top-date">
+          <div class="top-date__glow" aria-hidden="true"></div>
+
+          <div class="top-date__text">
+            <div class="top-date__value" id="miladiHijriDate">Loading...</div>
+            <div class="top-date__subtitle">
+              Waktu Solat Daerah Kuala Langat &bull; <span id="weatherStatus">Memuat cuaca...</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Logo Masjid -->
+        <div class="top-right-logo">
+          <img src="https://arleta.site/interactivelink/1610/LOGO-MKSLB.png" alt="Logo Masjid" />
+        </div>
+      </div>
 
       <main class="dashboard">
         <section class="card hero-card waktu-solat">
@@ -102,6 +126,7 @@
     <!-- Overlay Iklan / Slideshow -->
     <div id="posterSlideshow" class="poster-slideshow hidden" aria-hidden="true">
       <img id="posterImage" src="" alt="Iklan Masjid" />
+      <video id="posterVideo" muted loop playsinline></video>
       <div class="poster-slideshow__overlay">
         Kembali ke jadual dalam <span id="posterCountdown">--</span>s
       </div>

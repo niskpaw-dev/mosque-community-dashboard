@@ -17,7 +17,7 @@ function renderScheduleGridContent(schedule, activeName) {
   // Hijri and location are currently driven by the header in pages/index.html.
   // Keep schedule card compact to avoid UI duplication/conflicts.
   const hijriText = '—';
-  const locationText = 'Kuala Langat';
+  const locationText = 'Masjid Kampung Sungai Lang Baru';
   const isFriday = new Date().getDay() === 5;
 
   const rows = schedule
@@ -33,12 +33,11 @@ function renderScheduleGridContent(schedule, activeName) {
         minute: '2-digit',
       });
 
-      const activeClass = name === activeName ? 'schedule-row active' : 'schedule-row';
-      let rowClass = activeClass;
-      if (name === 'Syuruk') rowClass += ' schedule-row--syuruk';
-      if (name === 'Zawal') rowClass += ' schedule-row--zawal';
-      if (name === 'Imsak') rowClass += ' schedule-row--imsak';
-      if (name === 'Dhuhr' && isFriday) rowClass += ' schedule-row--jumaat';
+      const activeClass = name === activeName ? 'schedule-box active' : 'schedule-box';
+      let boxClass = activeClass;
+      if (name === 'Syuruk') boxClass += ' schedule-box--syuruk';
+      if (name === 'Imsak') boxClass += ' schedule-box--imsak';
+      if (name === 'Dhuhr' && isFriday) boxClass += ' schedule-box--jumaat';
 
       // Koleksi ikon dinamik untuk setiap waktu (Feather Icons)
       const iconPaths = {
@@ -46,7 +45,6 @@ function renderScheduleGridContent(schedule, activeName) {
         Fajr: '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>', // Bulan
         Syuruk: '<path d="M12 2v6"/><path d="m4.93 10.93 1.41 1.41"/><path d="M2 18h20"/><path d="M20 14h2"/><path d="m19.07 10.93-1.41 1.41"/><path d="M22 22H2"/><polyline points="8 6 12 2 16 6"/><path d="M16 18a4 4 0 0 0-8 0"/>', // Sunrise
         Dhuha: '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>', // Matahari penuh
-        Zawal: '<circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line>', // Ikon Alert/Amaran
         Dhuhr: '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>', // Matahari penuh
         Asr: '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>', // Matahari penuh
         Maghrib: '<path d="M12 10V2"/><path d="m4.93 10.93 1.41 1.41"/><path d="M2 18h20"/><path d="M20 14h2"/><path d="m19.07 10.93-1.41 1.41"/><path d="M22 22H2"/><polyline points="16 5 12 9 8 5"/><path d="M16 18a4 4 0 0 0-8 0"/>', // Sunset
@@ -58,14 +56,14 @@ function renderScheduleGridContent(schedule, activeName) {
         : '';
 
       return `
-        <div class="${rowClass}" role="listitem" aria-current="${
+        <div class="${boxClass}" role="listitem" aria-current="${
           name === activeName ? 'true' : 'false'
         }">
-          <span class="schedule-row__name">
+          <span class="schedule-box__name">
             ${iconHtml}
             ${label}
           </span>
-          <span class="schedule-row__time">${time}</span>
+          <span class="schedule-box__time">${time}</span>
         </div>
       `;
     })
@@ -75,7 +73,7 @@ function renderScheduleGridContent(schedule, activeName) {
   // Here we render only the schedule card content area (top info + rows).
   elements.scheduleGrid.innerHTML = `
     <div class="schedule-top" role="heading" aria-level="2">
-      <div class="schedule-title">Jadual Solat</div>
+      <div class="schedule-title">Jadual Solat Hari Ini</div>
 
       <div class="schedule-date" id="scheduleSubtitle">
         ${miladi} • ${hijriText}
