@@ -1,10 +1,10 @@
-﻿<!doctype html>
+﻿﻿<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../styles/style.css" />
-    <link rel="stylesheet" href="../styles/prayer-future-glass.css" />
+    <link rel="stylesheet" href="styles/style.css" />
+    <link rel="stylesheet" href="styles/prayer-future-glass.css" />
     <title>Waktu Solat Dashboard</title>
   </head>
   <body>
@@ -48,20 +48,8 @@
 
       <main class="dashboard">
         <section class="card hero-card waktu-solat">
-          <div class="hero-header">
-            <div>
-              <p class="eyebrow">Seterusnya</p>
-              <h2>⏰ Waktu Solat Sekarang</h2>
-            </div>
-            <span class="pill" id="prayerStatusPill">Aktif</span>
-          </div>
 
           <div class="hero-body">
-            <div class="hero-top-status" aria-label="Prayer active status">
-              <div class="hero-top-status__label">SEDANG BERLANGSUNG</div>
-              <div class="hero-top-status__badge" id="activePrayerBadge">—</div>
-            </div>
-
             <div class="hero-next" aria-label="Next upcoming prayer">
               <div class="hero-next__label">WAKTU SOLAT SETERUSNYA</div>
               <div class="hero-next__name" id="nextPrayerFocus">—</div>
@@ -109,11 +97,6 @@
             </div>
 
             <p id="lastUpdated" class="last-updated">Dikemaskini --</p>
-            <div
-              id="currentPrayerList"
-              class="current-prayer-list"
-              aria-label="Prayer shortcuts"
-            ></div>
           </div>
         </section>
 
@@ -132,6 +115,6 @@
       </div>
     </div>
 
-    <script type="module" src="../utils/app.js"></script>
+    <script type="module" src="utils/app.js"></script>
   </body>
 </html>

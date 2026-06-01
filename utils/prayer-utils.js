@@ -17,8 +17,17 @@ export function validatePrayerData(json) {
   return Array.isArray(json?.prayers) && json.prayers.length > 0;
 }
 
+// Cipta formatter di luar untuk elak bebanan CPU yang tinggi (Intl.DateTimeFormat amat berat jika dipanggil berulang kali)
+const myDateFormatter = new Intl.DateTimeFormat('en-MY', {
+  timeZone: 'Asia/Kuala_Lumpur',
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric'
+});
+
 export function normalizePrayerData(prayers, referenceDate) {
-  const currentRecord = prayers.find((entry) => compareMalaysiaDate(entry.fajr, referenceDate));
+  const referenceParts = myDateFormatter.format(referenceDate);
+  const currentRecord = prayers.find((entry) => compareMalaysiaDate(entry.fajr, referenceParts));
 
   if (!currentRecord) {
     throw new Error("Today's prayer schedule is not available");
@@ -46,16 +55,9 @@ export function normalizePrayerData(prayers, referenceDate) {
   };
 }
 
-function compareMalaysiaDate(timestamp, referenceDate) {
-  const formatter = new Intl.DateTimeFormat('en-MY', {
-    timeZone: 'Asia/Kuala_Lumpur',
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric'
-  });
-
-  const referenceParts = formatter.format(referenceDate);
-  const recordParts = formatter.format(new Date(timestamp * 1000));
+function compareMalaysiaDate(timestamp, referenceParts) {
+  // Hanya formatkan masa rekod sahaja, masa rujukan (referenceParts) diterima terus dari parameter
+  const recordParts = myDateFormatter.format(new Date(timestamp * 1000));
   return referenceParts === recordParts;
 }
 

@@ -1,4 +1,4 @@
-﻿﻿// Import Anime.js melalui CDN (Sesuai untuk Vanilla JS tanpa Node.js bundler)
+﻿﻿﻿﻿// Import Anime.js melalui CDN (Sesuai untuk Vanilla JS tanpa Node.js bundler)
 import anime from 'https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.es.js';
 
 import { CONFIG, getCurrentPrayer, getNextPrayer, getActiveHijri } from './prayer-utils.js';
@@ -208,14 +208,7 @@ function updatePrayerZonesAndCountdown() {
   }
   document.body.setAttribute('data-next-prayer', themeName);
 
-  // 1) CURRENT ACTIVE PRAYER
-  const activeLabel = CONFIG.translation[currentPrayer.name] || currentPrayer.name || '--';
-  if (focusEls.activeBadge) {
-    focusEls.activeBadge.textContent = `🌙 ${activeLabel}`;
-    focusEls.activeBadge.classList.add('active-prayer-pulse');
-  }
-
-  // 2) NEXT UPCOMING PRAYER / IQAMAH
+  // 1) NEXT UPCOMING PRAYER / IQAMAH
   if (state.isIqamah) {
     if (focusEls.nextLabel) focusEls.nextLabel.textContent = 'IQAMAH BERMULA DALAM';
     if (focusEls.nextName) focusEls.nextName.textContent = 'Menunggu Solat';
@@ -257,6 +250,10 @@ function setupIklanUploader() {
   uploaderBtn.querySelector('input').addEventListener('change', (e) => {
     const files = Array.from(e.target.files);
     if (files.length > 0) {
+      // Bersihkan memori (Revoke blob URL) untuk fail lama mengelak memory leak (kebocoran memori) pada Smart TV
+      POSTERS.forEach(p => {
+        if (p.url.startsWith('blob:')) URL.revokeObjectURL(p.url);
+      });
       POSTERS.length = 0; // Buang fail media hardcode yang sedia ada
       files.forEach(file => {
         const isVideo = file.type.startsWith('video/');
