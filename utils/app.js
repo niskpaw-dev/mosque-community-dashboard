@@ -97,14 +97,16 @@ function updateTopInfo() {
 
   // New top date section
   if (topDateEls.miladiHijriDate) {
-    const miladi = now.toLocaleDateString('ms-MY', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric'
-    });
+    const days = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat', 'Sabtu'];
+    const months = ['Jan', 'Feb', 'Mac', 'Apr', 'Mei', 'Jun', 'Jul', 'Ogo', 'Sep', 'Okt', 'Nov', 'Dis'];
+    const dayName = days[now.getDay()];
+    const dayStr = String(now.getDate()).padStart(2, '0');
+    const monthName = months[now.getMonth()];
+    const yearStr = now.getFullYear();
+    const miladi = `${dayName}, ${dayStr} ${monthName} ${yearStr}`;
 
     const hijri = state.hijriDate || getHijriDate(now);
-    topDateEls.miladiHijriDate.textContent = `${miladi} Miladi | ${hijri} Hijri`;
+    topDateEls.miladiHijriDate.textContent = `${miladi} | ${hijri}H`;
   }
 
   // Legacy chips
@@ -244,7 +246,7 @@ function setupIklanUploader() {
   // 1. Cipta Butang Muat Naik dari UI
   const uploaderBtn = document.createElement('label');
   uploaderBtn.className = 'upload-iklan-btn';
-  uploaderBtn.innerHTML = '📷 Muat Naik Iklan / Video <input type="file" accept="image/*,video/mp4,video/webm" multiple style="display:none;">';
+  uploaderBtn.innerHTML = '✨ Muat Naik Media <input type="file" accept="image/*,video/mp4,video/webm" multiple style="display:none;">';
   
   // 2. Gantikan array POSTERS apabila fail dipilih
   uploaderBtn.querySelector('input').addEventListener('change', (e) => {
