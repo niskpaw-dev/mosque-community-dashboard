@@ -11,6 +11,12 @@
     <div class="page-shell">
       <div class="hero-floating-ambient" aria-hidden="true"></div>
 
+      <!-- Animasi Partikel -->
+      <div class="particles-container" aria-hidden="true">
+        <div class="particles-layer-1"></div>
+        <div class="particles-layer-2"></div>
+      </div>
+
       <!-- Wrapper Grid Atas untuk elak Overlap -->
       <div class="top-bar">
         <!-- Flip Clock (Waktu Semasa) -->
@@ -52,7 +58,11 @@
           <div class="hero-body">
             <div class="hero-next" aria-label="Next upcoming prayer">
               <div class="hero-next__label">WAKTU SOLAT SETERUSNYA</div>
-              <div class="hero-next__name" id="nextPrayerFocus">—</div>
+              <div class="hero-next__title-group">
+                <div class="hero-next__name" id="nextPrayerFocus">—</div>
+                <div class="hero-next__divider">|</div>
+                <div class="hero-next__arabic" id="nextPrayerArabicFocus">—</div>
+              </div>
               <div class="hero-next__time" id="nextPrayerTimeFocus">--:--</div>
             </div>
 

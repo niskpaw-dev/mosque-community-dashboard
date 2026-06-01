@@ -10,6 +10,16 @@ export const CONFIG = {
     Asr: 'Asar',
     Maghrib: 'Maghrib',
     Isha: 'Isyak'
+  },
+  arabic: {
+    Imsak: 'الإمساك',
+    Fajr: 'الفجر',
+    Syuruk: 'الشروق',
+    Dhuha: 'الضحى',
+    Dhuhr: 'الظهر',
+    Asr: 'العصر',
+    Maghrib: 'المغرب',
+    Isha: 'العشاء'
   }
 };
 

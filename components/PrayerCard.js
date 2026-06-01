@@ -62,6 +62,8 @@ function renderScheduleGridContent(schedule, activeName) {
           <span class="schedule-box__name">
             ${iconHtml}
             ${label}
+            <span class="schedule-divider">|</span>
+            <span class="schedule-box__arabic">${CONFIG.arabic[name] || ''}</span>
           </span>
           <span class="schedule-box__time">${time}</span>
         </div>

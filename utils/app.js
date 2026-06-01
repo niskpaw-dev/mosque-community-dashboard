@@ -38,6 +38,7 @@ const topDateEls = {
 const focusEls = {
   activeBadge: document.getElementById('activePrayerBadge'),
   nextName: document.getElementById('nextPrayerFocus'),
+  nextArabic: document.getElementById('nextPrayerArabicFocus'),
   nextTime: document.getElementById('nextPrayerTimeFocus'),
   nextLabel: document.querySelector('.hero-next__label'),
   currentPrayerList: document.getElementById('currentPrayerList'),
@@ -213,10 +214,12 @@ function updatePrayerZonesAndCountdown() {
   // 1) NEXT UPCOMING PRAYER / IQAMAH
   if (state.isIqamah) {
     if (focusEls.nextLabel) focusEls.nextLabel.textContent = 'IQAMAH BERMULA DALAM';
+    if (focusEls.nextArabic) focusEls.nextArabic.textContent = 'إقامة';
     if (focusEls.nextName) focusEls.nextName.textContent = 'Menunggu Solat';
     if (focusEls.nextTime) focusEls.nextTime.textContent = targetTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
   } else {
     if (focusEls.nextLabel) focusEls.nextLabel.textContent = 'WAKTU SOLAT SETERUSNYA';
+    if (focusEls.nextArabic) focusEls.nextArabic.textContent = CONFIG.arabic[nextPrayer.name] || '—';
     if (focusEls.nextName) focusEls.nextName.textContent = CONFIG.translation[nextPrayer.name] || nextPrayer.name || '—';
     if (focusEls.nextTime) focusEls.nextTime.textContent = nextPrayer.date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
   }

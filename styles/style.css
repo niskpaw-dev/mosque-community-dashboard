@@ -152,6 +152,62 @@ body::after {
   transition: filter 1.5s ease;
 }
 
+/* =====================
+   Animasi Partikel Background
+===================== */
+.particles-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.particles-layer-1 {
+  position: absolute;
+  top: -150px; left: -150px;
+  width: calc(100vw + 300px);
+  height: calc(100vh + 300px);
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.25) 1.5px, transparent 2px),
+    radial-gradient(circle at 80% 40%, rgba(255, 255, 255, 0.15) 1px, transparent 1.5px),
+    radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.3) 2px, transparent 2.5px),
+    radial-gradient(circle at 60% 10%, rgba(255, 255, 255, 0.2) 1px, transparent 1.5px);
+  background-size: 120px 120px;
+  animation: particleTranslate1 30s linear infinite, particleTwinkle 6s ease-in-out infinite;
+  will-change: transform;
+}
+
+.particles-layer-2 {
+  position: absolute;
+  top: -200px; left: -200px;
+  width: calc(100vw + 400px);
+  height: calc(100vh + 400px);
+  background-image:
+    radial-gradient(circle at 30% 70%, rgba(var(--ring-rgb), 0.45) 1.5px, transparent 2px),
+    radial-gradient(circle at 70% 20%, rgba(var(--ring-rgb), 0.3) 2.5px, transparent 3px),
+    radial-gradient(circle at 10% 50%, rgba(var(--ring-rgb), 0.4) 1px, transparent 1.5px);
+  background-size: 180px 180px;
+  animation: particleTranslate2 45s linear infinite, particleTwinkle 9s ease-in-out infinite 3s;
+  will-change: transform;
+}
+
+@keyframes particleTranslate1 {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(120px, 120px); }
+}
+
+@keyframes particleTranslate2 {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(-180px, 180px); }
+}
+
+/* Efek Berkedip (Twinkle) */
+@keyframes particleTwinkle {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+
 .page-shell {
   width: 100%;
   height: 100vh;
@@ -188,14 +244,14 @@ body::after {
 
 .flip-group {
   position: relative;
-  background: linear-gradient(180deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.9) 100%);
-  border: 1px solid rgba(var(--ring-rgb), 0.35);
+  background: linear-gradient(180deg, rgba(var(--ring-rgb), 0.12) 0%, rgba(15, 23, 42, 0.9) 100%);
+  border: 1px solid rgba(var(--ring-rgb), 0.45);
   border-radius: 10px;
   box-shadow: 
     0 20px 50px rgba(0, 0, 0, 0.85), 
     0 10px 20px rgba(0, 0, 0, 0.6), 
     inset 0 1px 0 rgba(255, 255, 255, 0.15), 
-    0 0 25px rgba(var(--ring-rgb), 0.25);
+    0 0 35px rgba(var(--ring-rgb), 0.40);
   backdrop-filter: blur(12px);
   padding: clamp(8px, 1.5vh, 16px) clamp(10px, 2vw, 20px);
   overflow: hidden;
@@ -220,11 +276,11 @@ body::after {
 .flip-card {
   font-size: clamp(2.4rem, 5.5vh, 4.2rem);
   font-weight: 400;
-  color: rgba(var(--ring-rgb), 0.95);
+  color: rgb(var(--ring-rgb)); /* Warna tema lebih pekat */
   line-height: 1;
   text-align: center;
   min-width: 1.8ch;
-  text-shadow: 0 0 15px rgba(var(--ring-rgb), 0.4), 0 2px 4px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 0 25px rgba(var(--ring-rgb), 0.7), 0 0 10px rgba(var(--ring-rgb), 0.5), 0 2px 4px rgba(0, 0, 0, 0.8);
   position: relative;
   z-index: 1;
   transition: color 1.5s ease, text-shadow 1.5s ease;
@@ -252,7 +308,8 @@ body::after {
 
 .flip-colon {
   font-size: clamp(2.4rem, 5.5vh, 4.2rem);
-  color: rgba(var(--ring-rgb), 0.6);
+  color: rgb(var(--ring-rgb));
+  text-shadow: 0 0 15px rgba(var(--ring-rgb), 0.5);
   margin: 0 4px;
   animation: flipBlink 1s ease-in-out infinite;
   transition: color 1.5s ease;
@@ -262,10 +319,10 @@ body::after {
   font-size: clamp(1.1rem, 2.5vh, 1.6rem);
   font-family: Inter, system-ui, sans-serif;
   font-weight: 700;
-  color: rgba(var(--ring-rgb), 0.85);
+  color: rgb(var(--ring-rgb));
   margin-left: 4px;
   padding: 4px 8px;
-  background: rgba(var(--ring-rgb), 0.12);
+  background: rgba(var(--ring-rgb), 0.18);
   border-radius: 6px;
   letter-spacing: 0.05em;
   transition: color 1.5s ease, background 1.5s ease;
@@ -291,30 +348,50 @@ body::after {
   position: absolute;
   inset: -16px -24px;
   background:
-    radial-gradient(circle at 50% 20%, rgba(212, 160, 23, 0.18), transparent 45%),
-    radial-gradient(circle at 30% 80%, rgba(139, 107, 21, 0.12), transparent 55%);
+    radial-gradient(circle at 50% 20%, rgba(var(--ring-rgb), 0.18), transparent 45%),
+    radial-gradient(circle at 30% 80%, rgba(var(--ring-rgb-dark), 0.12), transparent 55%);
   filter: blur(10px);
   pointer-events: none;
+  transition: background 1.5s ease;
 }
 
 .top-date__text {
   position: relative;
-  padding: 18px 22px;
+  padding: 18px 36px; /* Dilebarkan sedikit supaya nampak lebih megah */
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(212, 160, 23, 0.18);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
+  border: 1px solid rgba(var(--ring-rgb), 0.25);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    0 18px 60px rgba(0, 0, 0, 0.20);
-  backdrop-filter: blur(16px);
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 0 20px rgba(var(--ring-rgb), 0.05),
+    0 18px 60px rgba(0, 0, 0, 0.25),
+    0 0 30px rgba(var(--ring-rgb), 0.15);
+  backdrop-filter: blur(20px);
+  transition: border-color 1.5s ease, box-shadow 1.5s ease;
+  overflow: hidden; /* Penting untuk mengelakkan kesan shimmer terkeluar */
+}
+
+/* Efek Cahaya Menyapu (Shimmer) */
+.top-date__text::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  transform: skewX(-20deg);
+  animation: headerShimmer 8s infinite;
+  pointer-events: none;
 }
 
 .top-date__value {
-  font-size: clamp(1.2rem, 3vh, 2rem);
+  font-size: clamp(1.4rem, 3.5vh, 2.2rem);
   font-weight: 900;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
   color: var(--white);
-  text-shadow: 0 0 22px rgba(212, 160, 23, 0.18);
+  text-shadow: 0 0 22px rgba(var(--ring-rgb), 0.4), 0 2px 4px rgba(0, 0, 0, 0.5);
+  transition: text-shadow 1.5s ease;
 }
 
 .top-date__subtitle {
@@ -322,7 +399,21 @@ body::after {
   font-size: clamp(0.9rem, 1.2vw, 1.2rem);
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(245, 245, 245, 0.78);
+  color: rgba(245, 245, 245, 0.85);
+}
+
+/* Sorotan Warna pada teks Cuaca */
+#weatherStatus {
+  color: rgba(var(--ring-rgb), 0.95);
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(var(--ring-rgb), 0.4);
+  transition: color 1.5s ease, text-shadow 1.5s ease;
+}
+
+@keyframes headerShimmer {
+  0% { left: -100%; }
+  15% { left: 200%; } /* Kelajuan kilat melintas */
+  100% { left: 200%; } /* Menunggu sehingga saat ke-8 sebelum berulang */
 }
 
 /* =====================
@@ -804,6 +895,18 @@ body::after {
   pointer-events: none;
 }
 
+.schedule-box__arabic {
+  font-family: 'Amiri', serif;
+  font-size: clamp(1.4rem, 2.5vh, 2rem);
+  line-height: 1;
+  color: rgba(212, 160, 23, 0.65);
+}
+
+.schedule-divider {
+  color: rgba(245, 245, 245, 0.25);
+  font-weight: 300;
+}
+
 .schedule-box__name,
 .schedule-box span:first-child {
   display: flex;
@@ -852,6 +955,15 @@ body::after {
   animation: activeBoxPulse 1.6s ease-in-out infinite;
 }
 
+.schedule-box.active .schedule-box__arabic {
+  color: rgba(212, 160, 23, 0.95);
+  text-shadow: 0 0 15px rgba(212, 160, 23, 0.4);
+}
+
+.schedule-box.active .schedule-divider {
+  color: rgba(212, 160, 23, 0.6);
+}
+
 .schedule-box.active::after {
   content: "";
   position: absolute;
@@ -867,10 +979,9 @@ body::after {
 .schedule-box.active::before {
   opacity: 1;
   background:
-    linear-gradient(105deg, transparent 20%, rgba(255, 255, 255, 0.12) 25%, rgba(255, 255, 255, 0.45) 28%, rgba(255, 255, 255, 0.12) 31%, transparent 36%) 200% 0 / 200% 100% no-repeat,
     radial-gradient(400px 160px at 50% 0%, rgba(212, 160, 23, 0.20), transparent 55%),
     linear-gradient(120deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0) 45%);
-  animation: glassShimmer 4s infinite linear;
+  animation: activeBgPulse 2.5s ease-in-out infinite;
 }
 
 @keyframes activeBoxPulse {
@@ -888,16 +999,13 @@ body::after {
   }
 }
 
-/* Animasi Kilauan Cermin */
-@keyframes glassShimmer {
-  0% {
-    background-position: 200% 0, 0 0, 0 0;
+/* Animasi Denyutan (Pulse) Latar Belakang */
+@keyframes activeBgPulse {
+  0%, 100% {
+    opacity: 0.3;
   }
-  20% {
-    background-position: -200% 0, 0 0, 0 0;
-  }
-  100% {
-    background-position: -200% 0, 0 0, 0 0;
+  50% {
+    opacity: 1;
   }
 }
 
@@ -914,6 +1022,10 @@ body::after {
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.08),
     0 16px 45px rgba(99, 102, 241, 0.12);
+}
+
+.schedule-box--imsak .schedule-box__arabic {
+  color: rgba(129, 140, 248, 0.75);
 }
 
 .schedule-box--imsak .schedule-box__name,
@@ -934,6 +1046,10 @@ body::after {
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.08),
     0 16px 45px rgba(245, 158, 11, 0.12);
+}
+
+.schedule-box--syuruk .schedule-box__arabic {
+  color: rgba(245, 158, 11, 0.75);
 }
 
 .schedule-box--syuruk .schedule-box__name,
@@ -963,7 +1079,6 @@ body::after {
 
 .schedule-box--jumaat.active::before {
   background:
-    linear-gradient(105deg, transparent 20%, rgba(255, 255, 255, 0.12) 25%, rgba(255, 255, 255, 0.45) 28%, rgba(255, 255, 255, 0.12) 31%, transparent 36%) 200% 0 / 200% 100% no-repeat,
     radial-gradient(400px 160px at 50% 0%, rgba(16, 185, 129, 0.20), transparent 55%),
     linear-gradient(120deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0) 45%);
 }
